@@ -1,6 +1,8 @@
 import { useSheetData } from '../hooks/useSheetData';
 import { SHEET_TABS } from '../config/sheets';
 import { LoadingState, EmptyState, ErrorState } from '../components/DataState';
+import PickleCatGreeting from '../components/PickleCatGreeting';
+import '../components/PickleCatGreeting.css';
 import './Arrivals.css';
 
 const DAY_ORDER = ['Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -37,6 +39,8 @@ export default function Arrivals({ year }) {
         <h1 className="page-title neon-cyan">Arrivals</h1>
         <p className="page-subtitle">Who's rolling in and when — Party Palace {year}</p>
       </div>
+
+      <PickleCatGreeting />
 
       <div className="arrivals-timeline">
         {DAY_ORDER.map((day) => {
