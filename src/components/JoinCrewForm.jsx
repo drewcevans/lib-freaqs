@@ -131,8 +131,8 @@ export default function JoinCrewForm({ onClose }) {
   return (
     <form className="jcf-form" onSubmit={handleSubmit} noValidate>
 
-      {/* Name */}
-      <div className="jcf-field">
+      {/* Name — full width */}
+      <div className="jcf-field jcf-field--full">
         <Label required>Name</Label>
         <FieldWrap error={errors.name}>
           <input className="jcf-input" type="text"
@@ -142,8 +142,8 @@ export default function JoinCrewForm({ onClose }) {
         {errors.name && <span className="jcf-error-msg">Name is required</span>}
       </div>
 
-      {/* Arrival Day + Time */}
-      <div className="jcf-grid-2">
+      {/* Arrival Day + Time — full width (contains its own 2-col) */}
+      <div className="jcf-grid-2 jcf-field--full">
         <div className="jcf-field">
           <Label required>Arrival Day</Label>
           <FieldWrap error={errors.arrivalDay}>
@@ -187,25 +187,25 @@ export default function JoinCrewForm({ onClose }) {
         <Toggle value={form.buildCrew} onChange={v => set('buildCrew', v)} />
       </div>
 
-      {/* Bringing a car */}
-      <div className="jcf-field jcf-toggle-field">
-        <Label>Bringing a car to camp?</Label>
-        <Toggle value={form.bringingCar} onChange={v => set('bringingCar', v)} />
+      {/* Bringing a car + conditional details — grouped full-width */}
+      <div className="jcf-car-group jcf-field--full">
+        <div className="jcf-field jcf-toggle-field">
+          <Label>Bringing a car to camp?</Label>
+          <Toggle value={form.bringingCar} onChange={v => set('bringingCar', v)} />
+        </div>
+        {form.bringingCar === true && (
+          <div className="jcf-field jcf-field--indented" style={{ marginTop: 10 }}>
+            <Label>Car Make &amp; Model</Label>
+            <FieldWrap highlight>
+              <input className="jcf-input" type="text" placeholder="e.g. Toyota Tacoma, gray"
+                value={form.carDetails} onChange={e => set('carDetails', e.target.value)} />
+            </FieldWrap>
+          </div>
+        )}
       </div>
 
-      {/* Car details — conditional */}
-      {form.bringingCar === true && (
-        <div className="jcf-field jcf-field--indented">
-          <Label>Car Make &amp; Model</Label>
-          <FieldWrap highlight>
-            <input className="jcf-input" type="text" placeholder="e.g. Toyota Tacoma, gray"
-              value={form.carDetails} onChange={e => set('carDetails', e.target.value)} />
-          </FieldWrap>
-        </div>
-      )}
-
-      {/* Sleeping situation */}
-      <div className="jcf-field">
+      {/* Sleeping situation — full width */}
+      <div className="jcf-field jcf-field--full">
         <Label>Where will you sleep?</Label>
         <div className="jcf-sleep-group">
           {SLEEP_OPTIONS.map(opt => (
@@ -236,8 +236,8 @@ export default function JoinCrewForm({ onClose }) {
         </FieldWrap>
       </div>
 
-      {/* Top 3 sets */}
-      <div className="jcf-field">
+      {/* Top 3 sets — full width */}
+      <div className="jcf-field jcf-field--full">
         <Label>Top 3 sets you're most excited to see ⚡</Label>
         <div className="jcf-sets-group">
           {[['set1', 'Set #1'], ['set2', 'Set #2'], ['set3', 'Set #3']].map(([key, placeholder]) => (
@@ -249,8 +249,8 @@ export default function JoinCrewForm({ onClose }) {
         </div>
       </div>
 
-      {/* Face-melting song */}
-      <div className="jcf-field">
+      {/* Face-melting song — full width (contains its own 2-col) */}
+      <div className="jcf-field jcf-field--full">
         <Label>What one song will melt your face off? 🔥</Label>
         <div className="jcf-grid-2">
           <FieldWrap>
@@ -264,8 +264,8 @@ export default function JoinCrewForm({ onClose }) {
         </div>
       </div>
 
-      {/* Anything else */}
-      <div className="jcf-field">
+      {/* Anything else — full width */}
+      <div className="jcf-field jcf-field--full">
         <Label>Anything else to know about you?</Label>
         <FieldWrap>
           <textarea className="jcf-textarea" rows={3}

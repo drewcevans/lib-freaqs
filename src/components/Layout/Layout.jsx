@@ -1,12 +1,12 @@
 import { Outlet } from 'react-router-dom';
 import NavBar from './NavBar';
-import StarField from '../StarField';
+import LaserShow from '../LaserShow';
 import './Layout.css';
 
 export default function Layout({ year, onYearChange }) {
   return (
     <>
-      <StarField />
+      <LaserShow />
       <NavBar year={year} onYearChange={onYearChange} />
       <main className="layout-main">
         <Outlet />

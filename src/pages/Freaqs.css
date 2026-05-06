@@ -54,7 +54,7 @@
   gap: 24px;
   margin-bottom: 8px;
   padding: 16px 20px;
-  background: var(--bg-card);
+  background: transparent;
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   flex-wrap: wrap;
@@ -90,6 +90,7 @@
 
 /* ---- Individual cards ---- */
 .freaq-card {
+  cursor: pointer;
   position: relative;
   background: linear-gradient(135deg, rgba(12,12,28,0.97), rgba(5,5,18,0.97));
   border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
@@ -163,4 +164,116 @@
 }
 
 .freaq-detail-icon { flex-shrink: 0; font-size: 0.9rem; }
+
+.freaq-sets-preview {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.freaq-card-tap {
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.55;
+  text-align: right;
+  transition: opacity 0.15s;
+}
+.freaq-card:hover .freaq-card-tap { opacity: 0.9; }
+
+/* ---- Detail modal ---- */
+.freaq-detail-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.freaq-builder-badge--modal {
+  align-self: flex-start;
+}
+
+.freaq-detail-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.freaq-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.freaq-detail-row-icon {
+  font-size: 1.05rem;
+  flex-shrink: 0;
+  width: 22px;
+  text-align: center;
+  margin-top: 1px;
+}
+
+.freaq-detail-row-label {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.freaq-detail-row-value {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.45;
+}
+
+.freaq-music-section {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.freaq-music-heading {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-shadow: 0 0 8px var(--accent);
+}
+
+.freaq-sets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.freaq-set-item {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  padding: 6px 12px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: 8px;
+}
+
+.freaq-melt-song {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.freaq-melt-title {
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+.freaq-melt-artist {
+  color: var(--text-muted);
+}
 
