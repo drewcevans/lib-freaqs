@@ -41,15 +41,14 @@
 /* ── SVG sizes ── */
 
 .pcg-pickle-svg {
-  height: 250px;
+  height: 260px;
   width: auto;
   display: block;
-  /* gentle idle sway on the SVG element itself */
   animation: idle-sway-left 5.5s ease-in-out infinite;
 }
 
 .pcg-cat-svg {
-  height: 255px;
+  height: 260px;
   width: auto;
   display: block;
   animation: idle-sway-right 5.5s ease-in-out infinite;
