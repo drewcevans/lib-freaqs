@@ -72,13 +72,6 @@ export default function StarField() {
         ctx.globalAlpha = alpha;
         ctx.fill();
         ctx.globalAlpha = 1;
-
-        // Tiny glow on bigger stars
-        if (s.r > 1.6) {
-          const glow = ctx.createRadialGradient(s.x * w, s.y * h, 0, s.x * w, s.y * h, s.r * 5);
-          glow.addColorStop(0, s.color.replace(')', `, ${alpha * 0.4})`).replace('#', 'rgba(').replace(/([0-9a-f]{2})/gi, (m) => parseInt(m, 16) + ',').slice(0, -1) + ')');
-          glow.addColorStop(1, 'transparent');
-        }
       });
 
       animId = requestAnimationFrame(draw);
