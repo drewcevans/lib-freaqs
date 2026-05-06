@@ -3,13 +3,13 @@ import YearSelector from './YearSelector';
 import './NavBar.css';
 
 const NAV_ITEMS = [
-  { to: '/',           label: 'Arrivals',    icon: '🏕️' },
-  { to: '/packing',   label: 'Packing',     icon: '🎒' },
-  { to: '/meals',     label: 'Meals',       icon: '🍕' },
-  { to: '/schedule',  label: 'Schedule',    icon: '📅' },
-  { to: '/build',     label: 'Build Crew',  icon: '🔧' },
-  { to: '/sets',      label: 'Sets',        icon: '🎵' },
-  { to: '/secrets',   label: 'Secret Sets', icon: '🔮' },
+  { to: '/',        label: 'Freaqs',        icon: '💃' },
+  { to: '/bring',   label: 'What To Bring', icon: '🧳' },
+  { to: '/food',    label: 'Food & Drank',  icon: '🍺' },
+  { to: '/builders',label: 'Builders',      icon: '🎨' },
+  { to: '/map',     label: 'Camp Map',      icon: '🗺️' },
+  { to: '/sets',    label: 'Set List',      icon: '⚡' },
+  { to: '/shh',     label: 'Shhh',          icon: '👀' },
 ];
 
 export default function NavBar({ year, onYearChange }) {

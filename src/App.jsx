@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
-import Arrivals from './pages/Arrivals';
-import Packing from './pages/Packing';
-import Meals from './pages/Meals';
-import Schedule from './pages/Schedule';
-import BuildCrew from './pages/BuildCrew';
-import Sets from './pages/Sets';
-import SecretSets from './pages/SecretSets';
+import Freaqs from './pages/Freaqs';
+import WhatToBring from './pages/WhatToBring';
+import FoodAndDrank from './pages/FoodAndDrank';
+import Builders from './pages/Builders';
+import CampMap from './pages/CampMap';
+import SetList from './pages/SetList';
+import Shh from './pages/Shh';
 import { DEFAULT_YEAR } from './config/sheets';
 
 export default function App() {
@@ -17,13 +17,13 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout year={year} onYearChange={setYear} />}>
-          <Route index       element={<Arrivals year={year} />} />
-          <Route path="packing"  element={<Packing year={year} />} />
-          <Route path="meals"    element={<Meals year={year} />} />
-          <Route path="schedule" element={<Schedule year={year} />} />
-          <Route path="build"    element={<BuildCrew year={year} />} />
-          <Route path="sets"     element={<Sets year={year} />} />
-          <Route path="secrets"  element={<SecretSets year={year} />} />
+          <Route index            element={<Freaqs year={year} />} />
+          <Route path="bring"     element={<WhatToBring year={year} />} />
+          <Route path="food"      element={<FoodAndDrank year={year} />} />
+          <Route path="builders"  element={<Builders year={year} />} />
+          <Route path="map"       element={<CampMap year={year} />} />
+          <Route path="sets"      element={<SetList year={year} />} />
+          <Route path="shh"       element={<Shh year={year} />} />
         </Route>
       </Routes>
     </BrowserRouter>

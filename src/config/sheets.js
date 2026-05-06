@@ -1,9 +1,9 @@
 // Google Sheets config — update Sheet IDs per year
-// To publish a sheet: File → Share → Publish to web → CSV
+// Publish: File → Share → Publish to web → CSV
 // URL format: https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={TAB_NAME}
 
 const SHEET_BASE = (sheetId, tab) =>
-  `https://docs.google.com/spreadsheets/d/1uPT_40uRgSe6a82E-SK3nCfkLT5eDpuL_W18xUGH9Sg/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
+  `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
 
 export const YEARS = ['2025', '2026'];
 export const DEFAULT_YEAR = '2026';
@@ -20,12 +20,11 @@ export const getSheetUrl = (year, tab) => {
 };
 
 export const SHEET_TABS = {
-  arrivals: 'Arrivals',
-  packing: 'Packing',
-  meals: 'Meals',
-  schedule: 'Schedule',
-  buildCrew: 'Build Crew',
-  sets: 'Sets',
-  secretSets: 'Secret Sets',
+  freaqs:      'Freaqs 💃🕺',
+  whatToBring: 'What To Bring 🧳',
+  foodAndDrank:'Food & Drank 🍺',
+  builders:    'Builders 🎨',
+  campMap:     'Camp Map 🗺️',
+  setList:     'Set List ⚡',
+  shh:         'Shhh 👀',
 };
-

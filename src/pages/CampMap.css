@@ -1,0 +1,110 @@
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.camp-map-svg {
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  border: 1px solid rgba(200, 0, 255, 0.2);
+  box-shadow: 0 0 40px rgba(200, 0, 255, 0.08), 0 0 80px rgba(0, 0, 0, 0.5);
+  display: block;
+}
+
+/* ── Info panel ── */
+.map-info-panel {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 220px;
+  background: rgba(6, 6, 26, 0.95);
+  border: 1px solid var(--pcolor);
+  border-radius: 12px;
+  box-shadow: 0 0 24px color-mix(in srgb, var(--pcolor) 30%, transparent);
+  backdrop-filter: blur(12px);
+  animation: slide-up 0.2s ease both;
+  overflow: hidden;
+}
+
+.map-info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.map-info-name {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--pcolor);
+  text-shadow: 0 0 8px var(--pcolor);
+}
+
+.map-info-close {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.map-info-close:hover { color: var(--neon-pink); }
+
+.map-info-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+}
+
+.map-info-row {
+  display: flex;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  align-items: flex-start;
+  line-height: 1.4;
+}
+
+/* ── Legend ── */
+.map-legend {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.map-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.map-legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.map-legend-rect {
+  width: 20px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1.5px solid;
+  flex-shrink: 0;
+}

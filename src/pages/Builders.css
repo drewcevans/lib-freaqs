@@ -1,0 +1,116 @@
+.builders-summary {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.builder-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.builder-stat-num {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0 12px currentColor;
+}
+
+.builder-stat-label {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.builders-team-section { margin-bottom: 36px; }
+
+.builders-team-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.builders-team-name {
+  font-size: 1rem;
+  color: var(--team-color);
+  text-shadow: 0 0 10px var(--team-color);
+}
+
+.builders-team-count {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.builders-instructions {
+  background: var(--bg-card-alt);
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.builders-instructions-label {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.builders-instructions-text {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.builders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.builder-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-color: color-mix(in srgb, var(--bcolor) 20%, transparent);
+}
+.builder-card:hover {
+  border-color: color-mix(in srgb, var(--bcolor) 50%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--bcolor) 12%, transparent);
+}
+
+.builder-card-name {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.builder-task {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 6px;
+}
+.builder-task-label { color: var(--text-dim); }
+
+.builder-arrival { font-size: 0.8rem; }
+.builder-time { color: var(--text-muted); }
+
+.builder-notes {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.4;
+}

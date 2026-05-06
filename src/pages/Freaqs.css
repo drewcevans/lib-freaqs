@@ -1,0 +1,221 @@
+/* ---- Header row ---- */
+.freaqs-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.freaqs-title {
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink), var(--neon-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(200, 0, 255, 0.5));
+}
+
+/* ---- Join the Crew button ---- */
+.join-crew-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 13px 28px;
+  background: linear-gradient(135deg, rgba(255, 0, 200, 0.12), rgba(200, 0, 255, 0.12));
+  border: 2px solid var(--neon-pink);
+  border-radius: 50px;
+  color: var(--neon-pink);
+  cursor: pointer;
+  text-shadow: 0 0 10px var(--neon-pink);
+  box-shadow: 0 0 18px rgba(255, 0, 200, 0.25), inset 0 0 18px rgba(255, 0, 200, 0.04);
+  animation: join-pulse 2.5s ease-in-out infinite;
+  transition: transform 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.join-crew-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 36px rgba(255, 0, 200, 0.5), inset 0 0 24px rgba(255, 0, 200, 0.08);
+}
+@keyframes join-pulse {
+  0%, 100% { box-shadow: 0 0 18px rgba(255,0,200,0.25), inset 0 0 18px rgba(255,0,200,0.04); }
+  50%       { box-shadow: 0 0 32px rgba(255,0,200,0.45), inset 0 0 24px rgba(255,0,200,0.08); }
+}
+
+/* ---- Stats bar ---- */
+.freaqs-stats {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 8px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+
+.freaq-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.freaq-stat-num {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.freaq-stat-label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ---- Crew grid ---- */
+.freaqs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+/* ---- Individual cards ---- */
+.freaq-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(12,12,28,0.97), rgba(5,5,18,0.97));
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 16px;
+  padding: 20px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.freaq-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: var(--accent);
+  box-shadow:
+    0 0 32px color-mix(in srgb, var(--accent) 25%, transparent),
+    0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Radial gradient glow in top-left corner */
+.freaq-card-glow {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%);
+  pointer-events: none;
+}
+
+.freaq-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.freaq-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent);
+  line-height: 1.2;
+}
+
+.freaq-builder-badge {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--neon-green);
+  color: var(--neon-green);
+  background: rgba(0, 255, 136, 0.1);
+  text-shadow: 0 0 6px var(--neon-green);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.freaq-details { display: flex; flex-direction: column; gap: 7px; }
+
+.freaq-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.freaq-detail-icon { flex-shrink: 0; font-size: 0.9rem; }
+
+/* ---- Join modal ---- */
+.join-modal-body { display: flex; flex-direction: column; gap: 18px; }
+
+.join-modal-intro {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.join-modal-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.join-item {
+  font-size: 0.83rem;
+  color: var(--text-primary);
+  padding: 8px 12px;
+  background: var(--bg-card-alt);
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+}
+
+.join-modal-note {
+  font-size: 0.82rem;
+  color: var(--neon-cyan);
+  background: rgba(0, 245, 255, 0.06);
+  border: 1px solid rgba(0, 245, 255, 0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  line-height: 1.5;
+}
+
+.join-form-btn {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: 50px;
+  border: 2px solid var(--neon-purple);
+  background: linear-gradient(135deg, rgba(200,0,255,0.15), rgba(255,0,200,0.1));
+  color: var(--neon-purple);
+  cursor: pointer;
+  text-shadow: 0 0 8px var(--neon-purple);
+  box-shadow: 0 0 20px rgba(200,0,255,0.2);
+  transition: transform 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.join-form-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 36px rgba(200,0,255,0.4);
+}
