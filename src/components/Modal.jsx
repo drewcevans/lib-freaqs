@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import './Modal.css';
 
-export default function Modal({ isOpen, onClose, title, children }) {
+export default function Modal({ isOpen, onClose, title, children, panelClass = '' }) {
   useEffect(() => {
     if (!isOpen) return;
     document.body.style.overflow = 'hidden';
@@ -17,7 +17,7 @@ export default function Modal({ isOpen, onClose, title, children }) {
 
   return (
     <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true">
-      <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
+      <div className={`modal-panel ${panelClass}`} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2 className="modal-title">{title}</h2>
           <button className="modal-close" onClick={onClose} aria-label="Close">✕</button>

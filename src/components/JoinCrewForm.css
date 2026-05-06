@@ -1,0 +1,388 @@
+/* ============================================================
+   Join the Crew Form — UV/neon aesthetic
+   ============================================================ */
+
+.jcf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Field layout ── */
+.jcf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.jcf-field--indented {
+  padding-left: 16px;
+  border-left: 2px solid rgba(255, 0, 200, 0.3);
+}
+
+.jcf-toggle-field {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.jcf-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 460px) {
+  .jcf-grid-2 { grid-template-columns: 1fr; }
+}
+
+/* ── Label ── */
+.jcf-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 8px rgba(0, 245, 255, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.jcf-required {
+  color: var(--neon-pink);
+  font-size: 0.75rem;
+}
+.jcf-required-note {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-align: right;
+  margin-top: -6px;
+}
+
+/* ── Gradient border wrapper ── */
+.jcf-field-wrap {
+  background: linear-gradient(
+    135deg,
+    rgba(200, 0, 255, 0.28),
+    rgba(0, 245, 255, 0.28)
+  );
+  border-radius: 10px;
+  padding: 1.5px;
+  transition: background 0.25s, box-shadow 0.25s;
+}
+.jcf-field-wrap:focus-within {
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  box-shadow:
+    0 0 0 3px rgba(0, 245, 255, 0.08),
+    0 0 20px rgba(0, 245, 255, 0.18),
+    0 0 40px rgba(200, 0, 255, 0.08);
+}
+.jcf-field-wrap--pink:focus-within {
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+  box-shadow:
+    0 0 0 3px rgba(255, 0, 200, 0.08),
+    0 0 20px rgba(255, 0, 200, 0.18);
+}
+.jcf-field-wrap--error {
+  background: linear-gradient(135deg, var(--neon-pink), rgba(255, 0, 200, 0.5));
+}
+
+/* ── Shared input/select/textarea skin ── */
+.jcf-input,
+.jcf-select,
+.jcf-textarea {
+  width: 100%;
+  background: #050514;
+  border: none;
+  border-radius: 8.5px;
+  padding: 11px 14px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+.jcf-input:focus,
+.jcf-select:focus,
+.jcf-textarea:focus {
+  outline: none;
+}
+.jcf-input::placeholder,
+.jcf-textarea::placeholder {
+  color: var(--text-dim);
+}
+
+/* ── Time input ── */
+.jcf-time { color-scheme: dark; }
+.jcf-time::-webkit-calendar-picker-indicator {
+  filter: invert(0.7) hue-rotate(180deg);
+  cursor: pointer;
+  opacity: 0.6;
+}
+.jcf-time::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+
+/* ── Select ── */
+.jcf-select-wrap {
+  position: relative;
+}
+.jcf-select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--neon-cyan);
+  pointer-events: none;
+  font-size: 0.75rem;
+}
+.jcf-select {
+  appearance: none;
+  padding-right: 32px;
+  cursor: pointer;
+}
+.jcf-select option {
+  background: #0a0a20;
+  color: #f0f0ff;
+}
+
+/* ── Textarea ── */
+.jcf-textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+/* ── Toggle (Yes/No) ── */
+.jcf-toggle {
+  display: flex;
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.jcf-toggle-btn {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 6px 18px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.jcf-toggle-btn:hover { color: var(--text-primary); }
+
+.jcf-toggle-btn.active--yes {
+  background: rgba(0, 255, 136, 0.14);
+  border-color: rgba(0, 255, 136, 0.45);
+  color: var(--neon-green);
+  text-shadow: 0 0 8px var(--neon-green);
+}
+.jcf-toggle-btn.active--no {
+  background: rgba(255, 0, 200, 0.12);
+  border-color: rgba(255, 0, 200, 0.4);
+  color: var(--neon-pink);
+  text-shadow: 0 0 8px var(--neon-pink);
+}
+
+/* ── Sleep option buttons ── */
+.jcf-sleep-group {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.jcf-sleep-btn {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.jcf-sleep-btn:hover {
+  color: var(--neon-purple);
+  border-color: rgba(200, 0, 255, 0.4);
+}
+.jcf-sleep-btn.active {
+  background: rgba(200, 0, 255, 0.14);
+  border-color: var(--neon-purple);
+  color: var(--neon-purple);
+  text-shadow: 0 0 8px var(--neon-purple);
+  box-shadow: 0 0 12px rgba(200, 0, 255, 0.2);
+}
+
+/* ── Validation messages ── */
+.jcf-error-msg {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--neon-pink);
+  text-shadow: 0 0 6px var(--neon-pink);
+}
+
+.jcf-error-banner {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 0, 200, 0.35);
+  background: rgba(255, 0, 200, 0.06);
+  font-size: 0.84rem;
+  color: var(--neon-pink);
+  line-height: 1.5;
+}
+
+/* ── Submit button ── */
+.jcf-submit-btn {
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 15px 28px;
+  border-radius: 50px;
+  border: 2px solid var(--neon-purple);
+  background: linear-gradient(135deg, rgba(200, 0, 255, 0.18), rgba(255, 0, 200, 0.14));
+  color: var(--neon-purple);
+  cursor: pointer;
+  text-shadow: 0 0 10px var(--neon-purple);
+  box-shadow:
+    0 0 20px rgba(200, 0, 255, 0.25),
+    inset 0 0 20px rgba(200, 0, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  animation: submit-pulse 2.8s ease-in-out infinite;
+}
+.jcf-submit-btn:hover:not(:disabled) {
+  transform: scale(1.02);
+  border-color: var(--neon-pink);
+  color: var(--neon-pink);
+  text-shadow: 0 0 10px var(--neon-pink);
+  box-shadow:
+    0 0 36px rgba(255, 0, 200, 0.4),
+    inset 0 0 24px rgba(255, 0, 200, 0.06);
+  animation: none;
+}
+.jcf-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  animation: none;
+}
+
+@keyframes submit-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(200,0,255,0.25), inset 0 0 20px rgba(200,0,255,0.04);
+  }
+  50% {
+    box-shadow: 0 0 36px rgba(200,0,255,0.45), inset 0 0 28px rgba(200,0,255,0.08);
+  }
+}
+
+/* ── Loading spinner ── */
+.jcf-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(200, 0, 255, 0.3);
+  border-top-color: var(--neon-purple);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ── Success screen ── */
+.jcf-success {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 8px 8px;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.jcf-success-glow {
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(
+    circle at 50% 30%,
+    rgba(200, 0, 255, 0.15),
+    rgba(255, 0, 200, 0.08) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.jcf-success-icon {
+  font-size: 4rem;
+  animation: float 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(255, 0, 200, 0.6));
+}
+
+.jcf-success-headline {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink), var(--neon-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(200, 0, 255, 0.4));
+  letter-spacing: 0.04em;
+}
+
+.jcf-success-sub {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 12px var(--neon-yellow);
+}
+
+.jcf-success-note {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 380px;
+  background: rgba(0, 245, 255, 0.05);
+  border: 1px solid rgba(0, 245, 255, 0.15);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.jcf-done-btn {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 13px 36px;
+  border-radius: 50px;
+  border: 2px solid var(--neon-cyan);
+  background: rgba(0, 245, 255, 0.1);
+  color: var(--neon-cyan);
+  cursor: pointer;
+  text-shadow: 0 0 8px var(--neon-cyan);
+  box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
+  transition: transform 0.15s, box-shadow 0.15s;
+  margin-top: 4px;
+}
+.jcf-done-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 36px rgba(0, 245, 255, 0.4);
+}

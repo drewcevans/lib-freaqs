@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useSheetData } from '../hooks/useSheetData';
 import { SHEET_TABS } from '../config/sheets';
-import { FORMS } from '../config/forms';
 import { LoadingState, EmptyState, ErrorState } from '../components/DataState';
 import Modal from '../components/Modal';
+import JoinCrewForm from '../components/JoinCrewForm';
 import PickleCatGreeting from '../components/PickleCatGreeting';
 import '../components/PickleCatGreeting.css';
 import './Freaqs.css';
@@ -27,10 +27,6 @@ export default function Freaqs({ year }) {
 
   const builders = data.filter((r) => isBuilder(r['Builder']));
   const cars = data.filter((r) => (r['Car Info'] || '').trim());
-
-  const handleJoinSubmit = () => {
-    window.open(FORMS.joinTheCrew, '_blank', 'noopener,noreferrer');
-  };
 
   return (
     <div className="page-container">
@@ -82,26 +78,9 @@ export default function Freaqs({ year }) {
       )}
 
       {/* Join the Crew modal */}
-      <Modal isOpen={joinOpen} onClose={() => setJoinOpen(false)} title="Join the Crew 🎪">
-        <div className="join-modal-body">
-          <p className="join-modal-intro">
-            Fill out the form to get on the Party Palace roster. Your info will appear on this page after you submit — it syncs from the Google Sheet automatically.
-          </p>
-          <div className="join-modal-items">
-            <div className="join-item">📛 Your name</div>
-            <div className="join-item">📅 Arrival day & time</div>
-            <div className="join-item">✌️ Departure day</div>
-            <div className="join-item">🎨 Build crew status</div>
-            <div className="join-item">🚗 Car info</div>
-            <div className="join-item">🏕️ Sleeping situation</div>
-          </div>
-          <p className="join-modal-note">
-            ✨ Your info shows up here once the sheet is updated. Refresh the page after submitting.
-          </p>
-          <button className="join-form-btn" onClick={handleJoinSubmit}>
-            Open Form in New Tab →
-          </button>
-        </div>
+      <Modal isOpen={joinOpen} onClose={() => setJoinOpen(false)}
+             title="Join the Crew 🎪" panelClass="modal-panel--wide">
+        <JoinCrewForm onClose={() => setJoinOpen(false)} />
       </Modal>
     </div>
   );
