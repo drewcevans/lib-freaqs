@@ -1,0 +1,6 @@
+.layout-main {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--nav-height);
+  min-height: 100vh;
+}
