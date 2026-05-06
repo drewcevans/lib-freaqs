@@ -10,7 +10,10 @@ const SLEEP_OPTIONS  = ['Tent', 'Car', 'Open Air', 'RV/Van', 'Wherever the vibe 
 const INIT = {
   name: '', arrivalDay: '', arrivalTime: '', departureDay: '',
   buildCrew: null, bringingCar: null, carDetails: '',
-  sleepingSituation: '', dietary: '', emergencyContact: '', anythingElse: '',
+  sleepingSituation: '', dietary: '', emergencyContact: '',
+  set1: '', set2: '', set3: '',
+  meltSongTitle: '', meltSongArtist: '',
+  anythingElse: '',
 };
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -52,9 +55,9 @@ function Toggle({ value, onChange }) {
 // ── Main form ─────────────────────────────────────────────────────────────────
 
 export default function JoinCrewForm({ onClose }) {
-  const [form, setForm]       = useState(INIT);
-  const [status, setStatus]   = useState('idle'); // idle | loading | success | error
-  const [errors, setErrors]   = useState({});
+  const [form, setForm]     = useState(INIT);
+  const [status, setStatus] = useState('idle'); // idle | loading | success
+  const [errors, setErrors] = useState({});
 
   const set = (key, val) => {
     setForm(f => ({ ...f, [key]: val }));
@@ -63,12 +66,12 @@ export default function JoinCrewForm({ onClose }) {
 
   const validate = () => {
     const e = {};
-    if (!form.name.trim())  e.name = true;
-    if (!form.arrivalDay)   e.arrivalDay = true;
+    if (!form.name.trim()) e.name = true;
+    if (!form.arrivalDay)  e.arrivalDay = true;
     return e;
   };
 
-  const handleSubmit = async (evt) => {
+  const handleSubmit = (evt) => {
     evt.preventDefault();
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
@@ -76,32 +79,36 @@ export default function JoinCrewForm({ onClose }) {
     setStatus('loading');
 
     const payload = {
-      name:               form.name.trim(),
-      arrivalDay:         form.arrivalDay,
-      arrivalTime:        form.arrivalTime,
-      departureDay:       form.departureDay,
-      buildCrew:          form.buildCrew === true ? 'Yes' : form.buildCrew === false ? 'No' : '',
-      bringingCar:        form.bringingCar === true ? 'Yes' : form.bringingCar === false ? 'No' : '',
-      carDetails:         form.bringingCar === true ? form.carDetails.trim() : '',
-      sleepingSituation:  form.sleepingSituation,
-      dietary:            form.dietary.trim(),
-      emergencyContact:   form.emergencyContact.trim(),
-      anythingElse:       form.anythingElse.trim(),
-      timestamp:          new Date().toISOString(),
+      name:              form.name.trim(),
+      arrivalDay:        form.arrivalDay,
+      arrivalTime:       form.arrivalTime,
+      departureDay:      form.departureDay,
+      buildCrew:         form.buildCrew === true ? 'Yes' : form.buildCrew === false ? 'No' : '',
+      bringingCar:       form.bringingCar === true ? 'Yes' : form.bringingCar === false ? 'No' : '',
+      carDetails:        form.bringingCar === true ? form.carDetails.trim() : '',
+      sleepingSituation: form.sleepingSituation,
+      dietary:           form.dietary.trim(),
+      emergencyContact:  form.emergencyContact.trim(),
+      set1:              form.set1.trim(),
+      set2:              form.set2.trim(),
+      set3:              form.set3.trim(),
+      meltSongTitle:     form.meltSongTitle.trim(),
+      meltSongArtist:    form.meltSongArtist.trim(),
+      anythingElse:      form.anythingElse.trim(),
+      timestamp:         new Date().toISOString(),
     };
 
-    try {
-      // no-cors + text/plain avoids CORS preflight — GAS receives the body as-is
-      await fetch(WEBHOOK, {
-        method:  'POST',
-        mode:    'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body:    JSON.stringify(payload),
-      });
-      setStatus('success');
-    } catch {
-      setStatus('error');
-    }
+    // Fire-and-forget — no-cors returns an opaque response so we can't
+    // read status anyway. Show success after a short delay regardless.
+    fetch(WEBHOOK, {
+      method:   'POST',
+      mode:     'no-cors',
+      redirect: 'follow',
+      headers:  { 'Content-Type': 'text/plain;charset=utf-8' },
+      body:     JSON.stringify(payload),
+    }).catch(() => {});
+
+    setTimeout(() => setStatus('success'), 900);
   };
 
   // ── Success screen ──────────────────────────────────────────────────────────
@@ -228,6 +235,34 @@ export default function JoinCrewForm({ onClose }) {
         </FieldWrap>
       </div>
 
+      {/* Top 3 sets */}
+      <div className="jcf-field">
+        <Label>Top 3 sets you're most excited to see ⚡</Label>
+        <div className="jcf-sets-group">
+          {[['set1', 'Set #1'], ['set2', 'Set #2'], ['set3', 'Set #3']].map(([key, placeholder]) => (
+            <FieldWrap key={key}>
+              <input className="jcf-input" type="text" placeholder={placeholder}
+                value={form[key]} onChange={e => set(key, e.target.value)} />
+            </FieldWrap>
+          ))}
+        </div>
+      </div>
+
+      {/* Face-melting song */}
+      <div className="jcf-field">
+        <Label>What one song will melt your face off? 🔥</Label>
+        <div className="jcf-grid-2">
+          <FieldWrap>
+            <input className="jcf-input" type="text" placeholder="Song title"
+              value={form.meltSongTitle} onChange={e => set('meltSongTitle', e.target.value)} />
+          </FieldWrap>
+          <FieldWrap>
+            <input className="jcf-input" type="text" placeholder="Artist"
+              value={form.meltSongArtist} onChange={e => set('meltSongArtist', e.target.value)} />
+          </FieldWrap>
+        </div>
+      </div>
+
       {/* Anything else */}
       <div className="jcf-field">
         <Label>Anything else to know about you?</Label>
@@ -237,13 +272,6 @@ export default function JoinCrewForm({ onClose }) {
             value={form.anythingElse} onChange={e => set('anythingElse', e.target.value)} />
         </FieldWrap>
       </div>
-
-      {/* Error banner */}
-      {status === 'error' && (
-        <div className="jcf-error-banner">
-          ⚠️ Couldn't reach the server. Check your connection and try again.
-        </div>
-      )}
 
       {/* Submit */}
       <button type="submit" className="jcf-submit-btn" disabled={status === 'loading'}>

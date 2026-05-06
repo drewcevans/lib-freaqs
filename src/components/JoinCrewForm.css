@@ -192,6 +192,13 @@
   text-shadow: 0 0 8px var(--neon-pink);
 }
 
+/* ── Top 3 sets stacked group ── */
+.jcf-sets-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 /* ── Sleep option buttons ── */
 .jcf-sleep-group {
   display: flex;
