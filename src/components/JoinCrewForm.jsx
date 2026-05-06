@@ -135,7 +135,8 @@ export default function JoinCrewForm({ onClose }) {
       <div className="jcf-field">
         <Label required>Name</Label>
         <FieldWrap error={errors.name}>
-          <input className="jcf-input" type="text" placeholder="Your full name"
+          <input className="jcf-input" type="text"
+            placeholder="Name or whatever you want to be called"
             value={form.name} onChange={e => set('name', e.target.value)} />
         </FieldWrap>
         {errors.name && <span className="jcf-error-msg">Name is required</span>}

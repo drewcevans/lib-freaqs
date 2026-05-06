@@ -4,13 +4,9 @@ import './Modal.css';
 export default function Modal({ isOpen, onClose, title, children, panelClass = '' }) {
   useEffect(() => {
     if (!isOpen) return;
-    document.body.style.overflow = 'hidden';
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
-    return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', onKey);
-    };
+    return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;

@@ -1,13 +1,17 @@
 .modal-overlay {
   position: fixed;
-  inset: 0;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 500;
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(8px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 24px;
+  overflow-y: auto;
   animation: modal-fade-in 0.18s ease both;
 }
 
@@ -22,8 +26,6 @@
   border-radius: 18px;
   width: 100%;
   max-width: 520px;
-  max-height: 90vh;
-  overflow-y: auto;
   box-shadow:
     0 0 40px rgba(200, 0, 255, 0.2),
     0 0 80px rgba(200, 0, 255, 0.06);
