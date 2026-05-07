@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { post } from '../config/webhook';
+import { useIdentity } from '../context/IdentityContext';
 import './JoinCrewForm.css';
 
 const ARRIVAL_DAYS   = ['Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -78,6 +79,7 @@ function Toggle({ value, onChange }) {
 // ── Main form ─────────────────────────────────────────────────────────────────
 
 export default function JoinCrewForm({ onClose, prefill, mode = 'join' }) {
+  const { identity }        = useIdentity();
   const [form, setForm]     = useState(prefill ? { ...INIT, ...prefill } : INIT);
   const [status, setStatus] = useState('idle');
   const [errors, setErrors] = useState({});
@@ -104,6 +106,7 @@ export default function JoinCrewForm({ onClose, prefill, mode = 'join' }) {
     const payload = {
       action:            mode === 'update' ? 'updateCrew' : 'joinCrew',
       name:              form.name.trim(),
+      displayName:       identity?.displayName || '',
       arrivalDay:        form.arrivalDay,
       arrivalTime:       form.arrivalTime,
       departureDay:      form.departureDay,

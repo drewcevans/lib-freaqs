@@ -16,8 +16,9 @@ const ACCENTS = [
   '#f5ff00', '#ff6600', '#ff88ff', '#88ffcc', '#ffaa00',
 ];
 
-const col       = (p, ...keys) => { for (const k of keys) { const v = (p[k] || '').trim(); if (v) return v; } return ''; };
-const isBuilder = (val) => /^(yes|true|1|y)$/i.test((val || '').trim());
+const col            = (p, ...keys) => { for (const k of keys) { const v = (p[k] || '').trim(); if (v) return v; } return ''; };
+const getDisplayName = (p) => col(p, 'Display Name', 'displayName') || col(p, 'Name', 'name') || '?';
+const isBuilder      = (val) => /^(yes|true|1|y)$/i.test((val || '').trim());
 const getSets   = (p)   => [
   col(p, 'Set 1', 'set1'),
   col(p, 'Set 2', 'set2'),
@@ -61,8 +62,14 @@ export default function Freaqs({ year }) {
   };
 
   const handleJoinOpen = () => {
-    setPrefillRow(null);
-    setFormMode('join');
+    if (identity?.sheetName) {
+      const myRow = data.find(r => (r['Name'] || '').trim() === identity.sheetName) || null;
+      setPrefillRow(myRow);
+      setFormMode('update');
+    } else {
+      setPrefillRow(null);
+      setFormMode('join');
+    }
     setJoinOpen(true);
   };
 
@@ -119,7 +126,7 @@ export default function Freaqs({ year }) {
 
       {selected && (
         <Modal isOpen onClose={() => setSelected(null)}
-               title={selected.person['Name'] || '?'}>
+               title={getDisplayName(selected.person)}>
           <FreaqDetail person={selected.person} index={selected.index}
             identity={identity} onEdit={() => handleEdit(selected.person)} />
         </Modal>
@@ -166,8 +173,8 @@ function FreaqCard({ person, index, identity, onClick }) {
       <div className="freaq-card-glow" />
 
       <div className="freaq-card-top">
-        <Avatar photo={isMe ? identity.photo : null} name={person['Name']} size="sm" />
-        <span className="freaq-name">{person['Name'] || '?'}</span>
+        <Avatar photo={isMe ? identity.photo : null} name={getDisplayName(person)} size="sm" />
+        <span className="freaq-name">{getDisplayName(person)}</span>
         {builder && <span className="freaq-builder-badge">🎨 Builder</span>}
       </div>
 
