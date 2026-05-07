@@ -16,49 +16,57 @@ const ACCENTS = [
   '#f5ff00', '#ff6600', '#ff88ff', '#88ffcc', '#ffaa00',
 ];
 
-const col            = (p, ...keys) => { for (const k of keys) { const v = (p[k] || '').trim(); if (v) return v; } return ''; };
-// Fall back to column-index lookup when header names don't match exactly
-const getSheetName   = (p) => col(p, 'Name', 'name') || (Object.values(p)[1] || '').trim();
-const getDisplayName = (p) => {
-  const dn = col(p, 'Display Name', 'displayName') || (Object.values(p)[2] || '').trim();
-  const nm = getSheetName(p);
-  return dn || nm || '?';
+// Named-key lookup — tries each key in order, returns first non-empty value
+const col = (p, ...keys) => {
+  for (const k of keys) { const v = (p[k] || '').trim(); if (v) return v; }
+  return '';
 };
-const isBuilder      = (val) => /^(yes|true|1|y)$/i.test((val || '').trim());
-const getSets   = (p)   => [
-  col(p, 'Set 1', 'set1'),
-  col(p, 'Set 2', 'set2'),
-  col(p, 'Set 3', 'set3'),
+// Positional lookup by 0-based column index (A=0, B=1, C=2, …)
+const idx = (p, i) => (Object.values(p)[i] || '').trim();
+
+// Name (col B=1) and Display Name (col C=2) with positional fallback
+const getSheetName   = (p) => col(p, 'Name', 'name')                        || idx(p, 1);
+const getDisplayName = (p) => col(p, 'Display Name', 'displayName') || idx(p, 2) || getSheetName(p) || '?';
+
+const isBuilder = (val) => /^(yes|true|1|y)$/i.test((val || '').trim());
+
+// Sets: M=12, N=13, O=14
+const getSets = (p) => [
+  col(p, 'Set 1', 'set1')  || idx(p, 12),
+  col(p, 'Set 2', 'set2')  || idx(p, 13),
+  col(p, 'Set 3', 'set3')  || idx(p, 14),
 ].filter(Boolean);
 
 export default function Freaqs({ year }) {
-  const { data, loading, error } = useSheetData(year, SHEET_TABS.freaqs);
-  const { identity }             = useIdentity();
-  const [joinOpen, setJoinOpen]  = useState(false);
-  const [editOpen, setEditOpen]  = useState(false);
+  const { data, loading, error }    = useSheetData(year, SHEET_TABS.freaqs);
+  const { identity, freshlyOnboarded } = useIdentity();
+  const [joinOpen, setJoinOpen]     = useState(false);
+  const [editOpen, setEditOpen]     = useState(false);
   const [prefillRow, setPrefillRow] = useState(null);
-  const [formMode, setFormMode]  = useState('join');
-  const [selected, setSelected]  = useState(null);
-  const autoJoinRef              = useRef(false);
+  const [formMode, setFormMode]     = useState('join');
+  const [selected, setSelected]     = useState(null);
+  const autoJoinRef                 = useRef(false);
 
-  // If the user is on the sheet but hasn't filled in arrival day, prompt them
+  // Auto-open "update vibe" only right after first onboarding — never on page refresh
   useEffect(() => {
-    if (autoJoinRef.current || !identity?.sheetName || loading || !data.length) return;
+    if (autoJoinRef.current || !freshlyOnboarded || !identity?.sheetName || loading || !data.length) return;
     const myRow = data.find(r => getSheetName(r) === identity.sheetName);
-    if (myRow && !col(myRow, 'Arrival Day', 'arrivalDay')) {
+    if (myRow && !(col(myRow, 'Arrival Day', 'arrivalDay') || idx(myRow, 3))) {
       autoJoinRef.current = true;
       setPrefillRow(myRow);
       setFormMode('update');
       setJoinOpen(true);
     }
-  }, [identity, data, loading]);
+  }, [identity, freshlyOnboarded, data, loading]);
 
   if (loading) return <LoadingState label="Loading the crew..." />;
   if (error)   return <ErrorState message={error} />;
 
-  const builders = data.filter(r => isBuilder(col(r, 'Builder')));
-  const cars     = data.filter(r => col(r, 'Car Make/Model', 'Car Info', 'carDetails'));
-  const openAir  = data.filter(r => col(r, 'Where will you sleep?', 'Sleeping Situation', 'sleepingSituation') === 'Open Air');
+  const builders = data.filter(r => isBuilder(col(r, 'Builder') || idx(r, 6)));
+  const cars     = data.filter(r => col(r, 'Car Make/Model', 'Car Info', 'carDetails') || idx(r, 8));
+  const openAir  = data.filter(r =>
+    (col(r, 'Where will you sleep?', 'Sleeping Situation', 'sleepingSituation') || idx(r, 9)) === 'Open Air'
+  );
 
   const handleEdit = (person) => {
     setPrefillRow(person);
@@ -141,7 +149,6 @@ export default function Freaqs({ year }) {
         </Modal>
       )}
 
-      {/* Join / update form modal */}
       <Modal isOpen={joinOpen} onClose={() => setJoinOpen(false)}
              title={formMode === 'update' ? 'Update my vibe ✏️' : 'Join the Crew 🎪'}
              panelClass="modal-panel--wide">
@@ -152,7 +159,6 @@ export default function Freaqs({ year }) {
         />
       </Modal>
 
-      {/* Edit my vibe modal (opened from FreaqDetail) */}
       <Modal isOpen={editOpen} onClose={() => setEditOpen(false)}
              title="Edit my vibe ✏️" panelClass="modal-panel--wide">
         <JoinCrewForm
@@ -167,13 +173,15 @@ export default function Freaqs({ year }) {
 
 function FreaqCard({ person, index, identity, onClick }) {
   const accent      = ACCENTS[index % ACCENTS.length];
-  const builder     = isBuilder(person['Builder']);
+  // Field lookups: named header first, column index as fallback
+  const builderVal  = col(person, 'Builder')                                   || idx(person, 6);
+  const builder     = isBuilder(builderVal);
+  const arrivalDay  = col(person, 'Arrival Day', 'arrivalDay')                 || idx(person, 3);
+  const arrivalTime = col(person, 'Arrival Time', 'arrivalTime')               || idx(person, 4);
+  const departure   = col(person, 'Departure Day', 'departureDay')             || idx(person, 5);
+  const meltTitle   = col(person, 'Melt Song Title', 'meltSongTitle')          || idx(person, 15);
+  const meltArtist  = col(person, 'Melt Song Artist', 'meltSongArtist')        || idx(person, 16);
   const sets        = getSets(person);
-  const arrivalDay  = col(person, 'Arrival Day', 'arrivalDay');
-  const arrivalTime = col(person, 'Arrival Time', 'arrivalTime');
-  const departure   = col(person, 'Departure Day', 'departureDay');
-  const meltTitle   = col(person, 'Melt Song Title', 'meltSongTitle');
-  const meltArtist  = col(person, 'Melt Song Artist', 'meltSongArtist');
   const isMe        = identity?.sheetName && getSheetName(person) === identity.sheetName;
 
   return (
@@ -224,19 +232,20 @@ function FreaqCard({ person, index, identity, onClick }) {
 
 function FreaqDetail({ person, index, identity, onEdit }) {
   const accent      = ACCENTS[index % ACCENTS.length];
-  const builder     = isBuilder(person['Builder']);
+  const builderVal  = col(person, 'Builder')                                                              || idx(person, 6);
+  const builder     = isBuilder(builderVal);
   const sets        = getSets(person);
-  const arrivalDay  = col(person, 'Arrival Day', 'arrivalDay');
-  const arrivalTime = col(person, 'Arrival Time', 'arrivalTime');
-  const departure   = col(person, 'Departure Day', 'departureDay');
-  const sleeping    = col(person, 'Where will you sleep?', 'Sleeping Situation', 'sleepingSituation');
-  const bringingCar = col(person, 'Car Placement', 'Bringing Car', 'bringingCar');
-  const carInfo     = col(person, 'Car Make/Model', 'Car Info', 'carDetails');
-  const dietary     = col(person, 'Dietary needs or restrictions', 'Dietary', 'dietaryNeeds', 'dietary');
-  const emergency   = col(person, 'Emergency contact', 'Emergency Contact', 'emergencyContact');
-  const anything    = col(person, 'Anything else to know about you?', 'Anything Else', 'anythingElse');
-  const meltTitle   = col(person, 'Melt Song Title', 'meltSongTitle');
-  const meltArtist  = col(person, 'Melt Song Artist', 'meltSongArtist');
+  const arrivalDay  = col(person, 'Arrival Day', 'arrivalDay')                                           || idx(person, 3);
+  const arrivalTime = col(person, 'Arrival Time', 'arrivalTime')                                         || idx(person, 4);
+  const departure   = col(person, 'Departure Day', 'departureDay')                                       || idx(person, 5);
+  const sleeping    = col(person, 'Where will you sleep?', 'Sleeping Situation', 'sleepingSituation')    || idx(person, 9);
+  const bringingCar = col(person, 'Car Placement', 'Bringing Car', 'bringingCar')                       || idx(person, 7);
+  const carInfo     = col(person, 'Car Make/Model', 'Car Info', 'carDetails')                           || idx(person, 8);
+  const dietary     = col(person, 'Dietary needs or restrictions', 'Dietary', 'dietaryNeeds', 'dietary') || idx(person, 10);
+  const emergency   = col(person, 'Emergency contact', 'Emergency Contact', 'emergencyContact')          || idx(person, 11);
+  const meltTitle   = col(person, 'Melt Song Title', 'meltSongTitle')                                   || idx(person, 15);
+  const meltArtist  = col(person, 'Melt Song Artist', 'meltSongArtist')                                 || idx(person, 16);
+  const anything    = col(person, 'Anything else to know about you?', 'Anything Else', 'anythingElse')  || idx(person, 17);
   const isMe        = identity?.sheetName && getSheetName(person) === identity.sheetName;
 
   const rows = [

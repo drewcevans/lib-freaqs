@@ -8,14 +8,21 @@ export function IdentityProvider({ children }) {
     try { return JSON.parse(localStorage.getItem(KEY)) || null; }
     catch { return null; }
   });
+  // true only when setIdentity was called this session (not loaded from storage on refresh)
+  const [freshlyOnboarded, setFreshlyOnboarded] = useState(false);
 
   const setIdentity = useCallback((data) => {
-    if (data) localStorage.setItem(KEY, JSON.stringify(data));
-    else localStorage.removeItem(KEY);
+    if (data) {
+      localStorage.setItem(KEY, JSON.stringify(data));
+      setFreshlyOnboarded(true);
+    } else {
+      localStorage.removeItem(KEY);
+      setFreshlyOnboarded(false);
+    }
     setRaw(data || null);
   }, []);
 
-  return <Ctx.Provider value={{ identity, setIdentity }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ identity, setIdentity, freshlyOnboarded }}>{children}</Ctx.Provider>;
 }
 
 export const useIdentity = () => useContext(Ctx);
