@@ -1,0 +1,165 @@
+.ag-header { margin-bottom: 20px; }
+
+/* ── Live banner ── */
+.ag-live-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 0, 200, 0.08);
+  border: 1px solid rgba(255, 0, 200, 0.3);
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+}
+
+.ag-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-pink);
+  box-shadow: 0 0 10px var(--neon-pink);
+  flex-shrink: 0;
+  animation: ag-live-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes ag-live-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.7); }
+}
+
+.ag-live-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--neon-pink);
+  text-shadow: 0 0 8px var(--neon-pink);
+  flex-shrink: 0;
+}
+
+.ag-live-sets {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Day tab accent for Agenda ── */
+.agenda-tab.active {
+  color: var(--neon-cyan) !important;
+  border-color: var(--neon-cyan) !important;
+  background: rgba(0, 245, 255, 0.06) !important;
+  text-shadow: 0 0 10px var(--neon-cyan) !important;
+}
+.agenda-tab:hover { color: var(--neon-cyan) !important; }
+
+/* ── Set rows ── */
+.ag-sets { display: flex; flex-direction: column; gap: 8px; }
+
+.ag-set-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 16px;
+  position: relative;
+}
+
+.ag-set-row--live {
+  border-color: rgba(255, 0, 200, 0.4);
+  background: rgba(255, 0, 200, 0.04);
+}
+
+.ag-set-row--going {
+  border-color: rgba(0, 255, 136, 0.3);
+}
+
+.ag-live-pill {
+  position: absolute;
+  top: -1px;
+  right: 12px;
+  background: var(--neon-pink);
+  color: #000;
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 2px 7px;
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 0 12px rgba(255, 0, 200, 0.6);
+}
+
+.ag-time-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.ag-time {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-shadow: 0 0 8px var(--neon-yellow);
+}
+
+.ag-end-time {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  font-family: var(--font-display);
+}
+
+.ag-artist {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.ag-stage {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ── Crew chips ── */
+.ag-crew-col {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 40px;
+}
+
+.ag-crew-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ag-crew-initial {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #000;
+  cursor: default;
+}
+
+@media (max-width: 640px) {
+  .ag-set-row {
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .ag-crew-col {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    margin-top: 4px;
+  }
+}

@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { useSheetData } from '../hooks/useSheetData';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useIdentity } from '../context/IdentityContext';
 import { SHEET_TABS } from '../config/sheets';
+import { post } from '../config/webhook';
 import { LoadingState, EmptyState, ErrorState } from '../components/DataState';
+import Avatar from '../components/Avatar';
 import './SetList.css';
 
 // Expected columns: Artist, Day, Time, Stage, End Time (optional), Going (comma-separated names)
@@ -36,8 +39,9 @@ const PERSON_COLORS = [
 export default function SetList({ year }) {
   const { data, loading, error } = useSheetData(year, SHEET_TABS.setList);
   const [going, setGoing] = useLocalStorage(`lib-going-${year}`, {});
+  const { identity }      = useIdentity();
   const [activeDay, setActiveDay] = useState(null);
-  const [viewMode, setViewMode] = useState('list'); // 'list' | 'timeline'
+  const [viewMode, setViewMode]   = useState('list'); // 'list' | 'timeline'
 
   if (loading) return <LoadingState label="Loading sets..." />;
   if (error)   return <ErrorState message={error} />;
@@ -60,17 +64,24 @@ export default function SetList({ year }) {
     .filter((r) => r['Day'] === selectedDay)
     .sort((a, b) => (timeToMins(a['Time']) || 0) - (timeToMins(b['Time']) || 0));
 
-  // Who's going per set (from sheet + local)
-  const goingKey = (set) => `${set['Artist']}|${set['Day']}|${set['Time']}`;
-  const toggleGoing = (set) => {
-    const k = goingKey(set);
-    setGoing({ ...going, [k]: !going[k] });
-  };
-  const iAmGoing = (set) => !!going[goingKey(set)];
+  const goingKey  = (set) => `${set['Artist']}|${set['Day']}|${set['Time']}`;
+  const iAmGoing  = (set) => !!going[goingKey(set)];
+  const crewGoing = (set) => (set['Going'] || '').split(',').map(s => s.trim()).filter(Boolean);
 
-  // Crew going per set from sheet
-  const crewGoing = (set) =>
-    (set['Going'] || '').split(',').map(s => s.trim()).filter(Boolean);
+  const toggleGoing = (set) => {
+    const k       = goingKey(set);
+    const nowGoing = !going[k];
+    setGoing({ ...going, [k]: nowGoing });
+    if (nowGoing && identity?.sheetName) {
+      post({
+        action: 'goingToSet',
+        name:   identity.sheetName,
+        artist: set['Artist'],
+        day:    set['Day'],
+        time:   set['Time'],
+      });
+    }
+  };
 
   // Timeline bounds
   const dayTimes = dayData.map(r => [timeToMins(r['Time']), timeToMins(r['End Time'])]).flat().filter(Boolean);
@@ -78,7 +89,7 @@ export default function SetList({ year }) {
   const tMax = dayTimes.length ? Math.max(...dayTimes) + 80 : 30 * 60;
   const span = tMax - tMin || 1;
 
-  // People represented in Going column for timeline
+  // People in Going column for color assignment
   const allPeople = [...new Set(
     data.flatMap(r => crewGoing(r))
   )].filter(Boolean);
@@ -114,10 +125,18 @@ export default function SetList({ year }) {
       {viewMode === 'list' && (
         <div className="sets-list">
           {dayData.map((set, i) => {
-            const going2 = iAmGoing(set);
-            const crew = crewGoing(set);
+            const iGoing    = iAmGoing(set);
+            const crew      = crewGoing(set);
+            const meInCrew  = identity?.sheetName ? crew.includes(identity.sheetName) : false;
+            const fullCrew  = iGoing && identity?.sheetName && !meInCrew
+              ? [...crew, identity.sheetName]
+              : crew;
+            const crewNames = iGoing && identity?.displayName && !meInCrew
+              ? [...crew, identity.displayName]
+              : crew;
+
             return (
-              <div key={i} className={`set-row neon-card ${going2 ? 'set-row--going' : ''}`}>
+              <div key={i} className={`set-row neon-card ${iGoing ? 'set-row--going' : ''}`}>
                 <div className="set-time-col">
                   <span className="set-time neon-yellow">{fmtTime(set['Time'])}</span>
                   {set['End Time'] && (
@@ -127,23 +146,29 @@ export default function SetList({ year }) {
                 <div className="set-info">
                   <div className="set-artist">{set['Artist'] || '—'}</div>
                   {set['Stage'] && <div className="set-stage">📍 {set['Stage']}</div>}
-                  {crew.length > 0 && (
+                  {fullCrew.length > 0 && (
                     <div className="set-crew">
-                      {crew.map((name) => (
-                        <span key={name} className="set-crew-dot"
-                          style={{ background: personColor[name] || 'var(--neon-purple)',
-                                   boxShadow: `0 0 5px ${personColor[name] || 'var(--neon-purple)'}` }}
-                          title={name}/>
-                      ))}
-                      <span className="set-crew-names">{crew.join(', ')}</span>
+                      {fullCrew.map((name) => {
+                        const isMe = identity?.sheetName && name === identity.sheetName;
+                        if (isMe && identity?.photo) {
+                          return <Avatar key={name} photo={identity.photo} name={name} size="sm" />;
+                        }
+                        return (
+                          <span key={name} className="set-crew-dot"
+                            style={{ background: personColor[name] || 'var(--neon-purple)',
+                                     boxShadow: `0 0 5px ${personColor[name] || 'var(--neon-purple)'}` }}
+                            title={name} />
+                        );
+                      })}
+                      <span className="set-crew-names">{crewNames.join(', ')}</span>
                     </div>
                   )}
                 </div>
                 <button
-                  className={`going-btn ${going2 ? 'going-btn--active' : ''}`}
+                  className={`going-btn ${iGoing ? 'going-btn--active' : ''}`}
                   onClick={() => toggleGoing(set)}
                 >
-                  {going2 ? '✓ Going' : "I'm Going"}
+                  {iGoing ? '✓ Going' : "I'm Going"}
                 </button>
               </div>
             );
@@ -171,9 +196,9 @@ export default function SetList({ year }) {
             <div className="tl-axis">
               {Array.from({ length: Math.ceil((tMax - tMin) / 60) + 1 }, (_, i) => {
                 const mins = tMin + i * 60;
-                const pct = ((mins - tMin) / span) * 100;
-                const h = Math.floor((mins % 1440) / 60);
-                const ap = h >= 12 ? 'PM' : 'AM';
+                const pct  = ((mins - tMin) / span) * 100;
+                const h    = Math.floor((mins % 1440) / 60);
+                const ap   = h >= 12 ? 'PM' : 'AM';
                 const label = `${h % 12 || 12} ${ap}`;
                 return pct <= 100 ? (
                   <div key={mins} className="tl-tick" style={{ left: `${pct}%` }}>

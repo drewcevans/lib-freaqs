@@ -1,7 +1,6 @@
 import { useState } from 'react';
+import { post } from '../config/webhook';
 import './JoinCrewForm.css';
-
-const WEBHOOK = 'https://script.google.com/macros/s/AKfycbzElJ7eBedD1goiEaXkjBLmLUDddqZ0amePiSG9oNYcDMGs5aSk7HqNWF0AeQxmnPA-/exec';
 
 const ARRIVAL_DAYS   = ['Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const DEPARTURE_DAYS = ['Saturday', 'Sunday', 'Monday'];
@@ -15,6 +14,30 @@ const INIT = {
   meltSongTitle: '', meltSongArtist: '',
   anythingElse: '',
 };
+
+export function rowToForm(row) {
+  if (!row) return {};
+  const c = (...keys) => { for (const k of keys) { const v = (row[k] || '').trim(); if (v) return v; } return ''; };
+  const b = (...keys) => { const v = c(...keys).toLowerCase(); return v === 'yes' ? true : v === 'no' ? false : null; };
+  return {
+    name:              c('Name', 'name'),
+    arrivalDay:        c('Arrival Day', 'arrivalDay'),
+    arrivalTime:       c('Arrival Time', 'arrivalTime'),
+    departureDay:      c('Departure Day', 'departureDay'),
+    buildCrew:         b('Builder', 'buildCrew'),
+    bringingCar:       b('Bringing Car', 'bringingCar'),
+    carDetails:        c('Car Info', 'carDetails'),
+    sleepingSituation: c('Sleeping Situation', 'sleepingSituation'),
+    dietary:           c('Dietary', 'dietary'),
+    emergencyContact:  c('Emergency Contact', 'emergencyContact'),
+    set1:              c('Set 1', 'set1'),
+    set2:              c('Set 2', 'set2'),
+    set3:              c('Set 3', 'set3'),
+    meltSongTitle:     c('Melt Song Title', 'meltSongTitle'),
+    meltSongArtist:    c('Melt Song Artist', 'meltSongArtist'),
+    anythingElse:      c('Anything Else', 'anythingElse'),
+  };
+}
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
@@ -54,9 +77,9 @@ function Toggle({ value, onChange }) {
 
 // ── Main form ─────────────────────────────────────────────────────────────────
 
-export default function JoinCrewForm({ onClose }) {
-  const [form, setForm]     = useState(INIT);
-  const [status, setStatus] = useState('idle'); // idle | loading | success
+export default function JoinCrewForm({ onClose, prefill, mode = 'join' }) {
+  const [form, setForm]     = useState(prefill ? { ...INIT, ...prefill } : INIT);
+  const [status, setStatus] = useState('idle');
   const [errors, setErrors] = useState({});
 
   const set = (key, val) => {
@@ -78,7 +101,8 @@ export default function JoinCrewForm({ onClose }) {
 
     setStatus('loading');
 
-    const payload = {
+    post({
+      action:            mode === 'update' ? 'updateCrew' : 'joinCrew',
       name:              form.name.trim(),
       arrivalDay:        form.arrivalDay,
       arrivalTime:       form.arrivalTime,
@@ -96,33 +120,32 @@ export default function JoinCrewForm({ onClose }) {
       meltSongArtist:    form.meltSongArtist.trim(),
       anythingElse:      form.anythingElse.trim(),
       timestamp:         new Date().toISOString(),
-    };
-
-    // Fire-and-forget — no-cors returns an opaque response so we can't
-    // read status anyway. Show success after a short delay regardless.
-    fetch(WEBHOOK, {
-      method:   'POST',
-      mode:     'no-cors',
-      redirect: 'follow',
-      headers:  { 'Content-Type': 'text/plain;charset=utf-8' },
-      body:     JSON.stringify(payload),
-    }).catch(() => {});
+    });
 
     setTimeout(() => setStatus('success'), 900);
   };
 
   // ── Success screen ──────────────────────────────────────────────────────────
   if (status === 'success') {
+    const isUpdate = mode === 'update';
     return (
       <div className="jcf-success">
         <div className="jcf-success-glow" />
-        <div className="jcf-success-icon">🎪</div>
-        <h3 className="jcf-success-headline">You're in the crew!</h3>
-        <p className="jcf-success-sub">See you at the Palace 🏰</p>
-        <p className="jcf-success-note">
-          Your info will show up on the Freaqs page once the sheet syncs. Give it a minute, then refresh.
+        <div className="jcf-success-icon">{isUpdate ? '✨' : '🎪'}</div>
+        <h3 className="jcf-success-headline">
+          {isUpdate ? 'Vibe updated!' : "You're in the crew!"}
+        </h3>
+        <p className="jcf-success-sub">
+          {isUpdate ? 'Your info will update on the Freaqs page shortly.' : 'See you at the Palace 🏰'}
         </p>
-        <button className="jcf-done-btn" onClick={onClose}>Let's go ⚡</button>
+        {!isUpdate && (
+          <p className="jcf-success-note">
+            Your info will show up on the Freaqs page once the sheet syncs. Give it a minute, then refresh.
+          </p>
+        )}
+        <button className="jcf-done-btn" onClick={onClose}>
+          {isUpdate ? 'Back to the crew ⚡' : "Let's go ⚡"}
+        </button>
       </div>
     );
   }
@@ -142,7 +165,7 @@ export default function JoinCrewForm({ onClose }) {
         {errors.name && <span className="jcf-error-msg">Name is required</span>}
       </div>
 
-      {/* Arrival Day + Time — full width (contains its own 2-col) */}
+      {/* Arrival Day + Time */}
       <div className="jcf-grid-2 jcf-field--full">
         <div className="jcf-field">
           <Label required>Arrival Day</Label>
@@ -187,7 +210,7 @@ export default function JoinCrewForm({ onClose }) {
         <Toggle value={form.buildCrew} onChange={v => set('buildCrew', v)} />
       </div>
 
-      {/* Bringing a car + conditional details — grouped full-width */}
+      {/* Bringing a car + conditional details */}
       <div className="jcf-car-group jcf-field--full">
         <div className="jcf-field jcf-toggle-field">
           <Label>Bringing a car to camp?</Label>
@@ -204,7 +227,7 @@ export default function JoinCrewForm({ onClose }) {
         )}
       </div>
 
-      {/* Sleeping situation — full width */}
+      {/* Sleeping situation */}
       <div className="jcf-field jcf-field--full">
         <Label>Where will you sleep?</Label>
         <div className="jcf-sleep-group">
@@ -236,7 +259,7 @@ export default function JoinCrewForm({ onClose }) {
         </FieldWrap>
       </div>
 
-      {/* Top 3 sets — full width */}
+      {/* Top 3 sets */}
       <div className="jcf-field jcf-field--full">
         <Label>Top 3 sets you're most excited to see ⚡</Label>
         <div className="jcf-sets-group">
@@ -249,7 +272,7 @@ export default function JoinCrewForm({ onClose }) {
         </div>
       </div>
 
-      {/* Face-melting song — full width (contains its own 2-col) */}
+      {/* Face-melting song */}
       <div className="jcf-field jcf-field--full">
         <Label>What one song will melt your face off? 🔥</Label>
         <div className="jcf-grid-2">
@@ -264,7 +287,7 @@ export default function JoinCrewForm({ onClose }) {
         </div>
       </div>
 
-      {/* Anything else — full width */}
+      {/* Anything else */}
       <div className="jcf-field jcf-field--full">
         <Label>Anything else to know about you?</Label>
         <FieldWrap>
@@ -278,7 +301,7 @@ export default function JoinCrewForm({ onClose }) {
       <button type="submit" className="jcf-submit-btn" disabled={status === 'loading'}>
         {status === 'loading'
           ? <><span className="jcf-spinner" /> Sending…</>
-          : 'Join the Crew 🎪'}
+          : mode === 'update' ? 'Update my vibe ✨' : 'Join the Crew 🎪'}
       </button>
 
       <p className="jcf-required-note"><span className="jcf-required">*</span> required</p>

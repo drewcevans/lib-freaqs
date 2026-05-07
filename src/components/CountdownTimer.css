@@ -1,0 +1,109 @@
+.cdt-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 18px 28px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(200, 0, 255, 0.18);
+  border-radius: 14px;
+  box-shadow:
+    0 0 30px rgba(200, 0, 255, 0.06),
+    inset 0 0 40px rgba(200, 0, 255, 0.02);
+}
+
+.cdt-label {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cdt-digits {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cdt-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 52px;
+}
+
+.cdt-num {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.cdt-num.neon-purple {
+  color: var(--neon-purple);
+  text-shadow:
+    0 0 8px var(--neon-purple),
+    0 0 24px var(--neon-purple),
+    0 0 56px rgba(200, 0, 255, 0.45);
+}
+.cdt-num.neon-cyan {
+  color: var(--neon-cyan);
+  text-shadow:
+    0 0 8px var(--neon-cyan),
+    0 0 24px var(--neon-cyan),
+    0 0 56px rgba(0, 245, 255, 0.45);
+}
+.cdt-num.neon-pink {
+  color: var(--neon-pink);
+  text-shadow:
+    0 0 8px var(--neon-pink),
+    0 0 24px var(--neon-pink),
+    0 0 56px rgba(255, 0, 200, 0.45);
+}
+.cdt-num.neon-yellow {
+  color: var(--neon-yellow);
+  text-shadow:
+    0 0 8px var(--neon-yellow),
+    0 0 24px var(--neon-yellow),
+    0 0 56px rgba(245, 255, 0, 0.45);
+}
+
+.cdt-unit-label {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.cdt-sep {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--text-dim);
+  opacity: 0.4;
+  margin-top: -14px;
+  flex-shrink: 0;
+}
+
+.cdt-arrived {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink), var(--neon-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 480px) {
+  .cdt-wrap { padding: 14px 16px; }
+  .cdt-num { font-size: 2rem; }
+  .cdt-sep { font-size: 1.6rem; }
+  .cdt-unit { min-width: 42px; }
+}

@@ -4,3 +4,10 @@
   padding-top: var(--nav-height);
   min-height: 100vh;
 }
+
+@media (max-width: 640px) {
+  /* space for bottom tab bar + device safe area */
+  .layout-main {
+    padding-bottom: calc(62px + env(safe-area-inset-bottom, 0px));
+  }
+}

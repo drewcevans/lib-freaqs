@@ -1,15 +1,17 @@
 import { NavLink } from 'react-router-dom';
 import YearSelector from './YearSelector';
+import ProfileBadge from '../ProfileBadge';
 import './NavBar.css';
 
 const NAV_ITEMS = [
-  { to: '/',        label: 'Freaqs',        icon: '💃' },
-  { to: '/bring',   label: 'What To Bring', icon: '🧳' },
-  { to: '/food',    label: 'Food & Drank',  icon: '🍺' },
-  { to: '/builders',label: 'Builders',      icon: '🎨' },
-  { to: '/map',     label: 'Camp Map',      icon: '🗺️' },
-  { to: '/sets',    label: 'Set List',      icon: '⚡' },
-  { to: '/shh',     label: 'Shhh',          icon: '👀' },
+  { to: '/',         label: 'Freaqs',        icon: '💃' },
+  { to: '/agenda',   label: 'Agenda',        icon: '📅' },
+  { to: '/bring',    label: 'What To Bring', icon: '🧳' },
+  { to: '/food',     label: 'Food & Drank',  icon: '🍺' },
+  { to: '/builders', label: 'Builders',      icon: '🎨' },
+  { to: '/map',      label: 'Camp Map',      icon: '🗺️' },
+  { to: '/sets',     label: 'Set List',      icon: '⚡' },
+  { to: '/shh',      label: 'Shhh',          icon: '👀' },
 ];
 
 export default function NavBar({ year, onYearChange }) {
@@ -40,6 +42,7 @@ export default function NavBar({ year, onYearChange }) {
 
         <div className="navbar-right">
           <YearSelector year={year} onChange={onYearChange} />
+          <ProfileBadge />
         </div>
       </div>
     </header>

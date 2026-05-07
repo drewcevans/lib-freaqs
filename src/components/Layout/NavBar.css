@@ -127,3 +127,8 @@
   .brand-logo { font-size: 1.2rem; }
   .brand-name { font-size: 0.82rem; }
 }
+
+/* ---- Mobile: nav moves to bottom tab bar ---- */
+@media (max-width: 640px) {
+  .navbar-nav { display: none; }
+}

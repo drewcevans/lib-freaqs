@@ -122,7 +122,7 @@
 
 .freaq-card-top {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 8px;
   margin-bottom: 14px;
@@ -135,6 +135,7 @@
   color: var(--accent);
   text-shadow: 0 0 10px var(--accent);
   line-height: 1.2;
+  flex: 1;
 }
 
 .freaq-builder-badge {
@@ -277,3 +278,66 @@
   color: var(--text-muted);
 }
 
+.freaq-edit-btn {
+  align-self: center;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(255, 0, 200, 0.4);
+  border-radius: 8px;
+  padding: 10px 18px;
+  color: var(--neon-pink);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  margin-top: 4px;
+}
+.freaq-edit-btn:hover {
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 16px rgba(255, 0, 200, 0.3);
+}
+
+
+/* ================================================================
+   Mobile responsive
+   ================================================================ */
+
+@media (max-width: 640px) {
+  .freaqs-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .join-crew-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Scrollable stats row */
+  .freaqs-stats {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 14px 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+  .freaqs-stats::-webkit-scrollbar { display: none; }
+  .freaq-stat { flex-shrink: 0; }
+
+  /* Cards full width */
+  .freaqs-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .freaq-stat-num { font-size: 1.4rem; }
+  .freaq-card { padding: 16px; }
+}
