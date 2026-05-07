@@ -1,0 +1,18 @@
+{
+  "name": "LiB Freaqs",
+  "short_name": "LiB Freaqs",
+  "description": "Party Palace — Lightning in a Bottle camp app",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#1a0035",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
