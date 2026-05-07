@@ -101,17 +101,17 @@ export default function JoinCrewForm({ onClose, prefill, mode = 'join' }) {
 
     setStatus('loading');
 
-    post({
+    const payload = {
       action:            mode === 'update' ? 'updateCrew' : 'joinCrew',
       name:              form.name.trim(),
       arrivalDay:        form.arrivalDay,
       arrivalTime:       form.arrivalTime,
       departureDay:      form.departureDay,
-      buildCrew:         form.buildCrew === true ? 'Yes' : form.buildCrew === false ? 'No' : '',
-      bringingCar:       form.bringingCar === true ? 'Yes' : form.bringingCar === false ? 'No' : '',
-      carDetails:        form.bringingCar === true ? form.carDetails.trim() : '',
+      builder:           form.buildCrew === true ? 'Yes' : form.buildCrew === false ? 'No' : '',
+      carPlacement:      form.bringingCar === true ? 'Yes' : form.bringingCar === false ? 'No' : '',
+      carMakeModel:      form.bringingCar === true ? form.carDetails.trim() : '',
       sleepingSituation: form.sleepingSituation,
-      dietary:           form.dietary.trim(),
+      dietaryNeeds:      form.dietary.trim(),
       emergencyContact:  form.emergencyContact.trim(),
       set1:              form.set1.trim(),
       set2:              form.set2.trim(),
@@ -119,8 +119,9 @@ export default function JoinCrewForm({ onClose, prefill, mode = 'join' }) {
       meltSongTitle:     form.meltSongTitle.trim(),
       meltSongArtist:    form.meltSongArtist.trim(),
       anythingElse:      form.anythingElse.trim(),
-      timestamp:         new Date().toISOString(),
-    });
+    };
+    console.log('JoinCrewForm payload:', payload);
+    post(payload);
 
     setTimeout(() => setStatus('success'), 900);
   };
