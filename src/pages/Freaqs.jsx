@@ -18,9 +18,13 @@ const ACCENTS = [
   '#f5ff00', '#ff6600', '#ff88ff', '#88ffcc', '#ffaa00',
 ];
 
-const isBuilder  = (val) => /^(yes|true|1|y)$/i.test((val || '').trim());
-const getSets    = (p)   => ['Set 1','Set 2','Set 3'].map(k => p[k]).filter(Boolean);
-const getArrival = (p)   => [p['Arrival Day'], p['Arrival Time'] && `@ ${p['Arrival Time']}`].filter(Boolean).join(' ');
+const isBuilder = (val) => /^(yes|true|1|y)$/i.test((val || '').trim());
+const getSets   = (p)   => [
+  col(p, 'Set 1', 'set1'),
+  col(p, 'Set 2', 'set2'),
+  col(p, 'Set 3', 'set3'),
+].filter(Boolean);
+const col       = (p, ...keys) => { for (const k of keys) { const v = (p[k] || '').trim(); if (v) return v; } return ''; };
 
 export default function Freaqs({ year }) {
   const { data, loading, error } = useSheetData(year, SHEET_TABS.freaqs);
@@ -100,10 +104,14 @@ export default function Freaqs({ year }) {
 }
 
 function FreaqCard({ person, index, onClick }) {
-  const accent  = ACCENTS[index % ACCENTS.length];
-  const builder = isBuilder(person['Builder']);
-  const sets    = getSets(person);
-  const arrival = getArrival(person);
+  const accent      = ACCENTS[index % ACCENTS.length];
+  const builder     = isBuilder(person['Builder']);
+  const sets        = getSets(person);
+  const arrivalDay  = col(person, 'Arrival Day', 'arrivalDay');
+  const arrivalTime = col(person, 'Arrival Time', 'arrivalTime');
+  const departure   = col(person, 'Departure Day', 'departureDay');
+  const meltTitle   = col(person, 'Melt Song Title', 'meltSongTitle');
+  const meltArtist  = col(person, 'Melt Song Artist', 'meltSongArtist');
 
   return (
     <div className="freaq-card" style={{ '--accent': accent }} onClick={onClick}
@@ -116,16 +124,16 @@ function FreaqCard({ person, index, onClick }) {
       </div>
 
       <div className="freaq-details">
-        {arrival && (
+        {arrivalDay && (
           <div className="freaq-detail">
             <span className="freaq-detail-icon">💃</span>
-            <span>{arrival}</span>
+            <span>Arrives {arrivalDay}{arrivalTime && ` @ ${arrivalTime}`}</span>
           </div>
         )}
-        {person['Departure Day'] && (
+        {departure && (
           <div className="freaq-detail">
             <span className="freaq-detail-icon">✌️</span>
-            <span>Leaves {person['Departure Day']}</span>
+            <span>Leaves {departure}</span>
           </div>
         )}
         {sets.length > 0 && (
@@ -134,12 +142,12 @@ function FreaqCard({ person, index, onClick }) {
             <span className="freaq-sets-preview">{sets.join(' · ')}</span>
           </div>
         )}
-        {person['Melt Song Title'] && (
+        {meltTitle && (
           <div className="freaq-detail">
             <span className="freaq-detail-icon">🔥</span>
             <span>
-              &ldquo;{person['Melt Song Title']}&rdquo;
-              {person['Melt Song Artist'] && ` — ${person['Melt Song Artist']}`}
+              &ldquo;{meltTitle}&rdquo;
+              {meltArtist && ` — ${meltArtist}`}
             </span>
           </div>
         )}
@@ -151,19 +159,31 @@ function FreaqCard({ person, index, onClick }) {
 }
 
 function FreaqDetail({ person, index }) {
-  const accent  = ACCENTS[index % ACCENTS.length];
-  const builder = isBuilder(person['Builder']);
-  const sets    = getSets(person);
-  const arrival = getArrival(person);
+  const accent      = ACCENTS[index % ACCENTS.length];
+  const builder     = isBuilder(person['Builder']);
+  const sets        = getSets(person);
+  const arrivalDay  = col(person, 'Arrival Day', 'arrivalDay');
+  const arrivalTime = col(person, 'Arrival Time', 'arrivalTime');
+  const departure   = col(person, 'Departure Day', 'departureDay');
+  const sleeping    = col(person, 'Sleeping Situation', 'sleepingSituation');
+  const bringingCar = col(person, 'Bringing Car', 'bringingCar');
+  const carInfo     = col(person, 'Car Info', 'carDetails');
+  const dietary     = col(person, 'Dietary', 'dietary');
+  const emergency   = col(person, 'Emergency Contact', 'emergencyContact');
+  const anything    = col(person, 'Anything Else', 'anythingElse');
+  const meltTitle   = col(person, 'Melt Song Title', 'meltSongTitle');
+  const meltArtist  = col(person, 'Melt Song Artist', 'meltSongArtist');
 
   const rows = [
-    { icon: '💃', label: 'Arriving',         value: arrival },
-    { icon: '✌️', label: 'Leaving',           value: person['Departure Day'] },
-    { icon: '🏕️', label: 'Sleeping',          value: person['Sleeping Situation'] },
-    { icon: '🚗', label: 'Car',               value: person['Car Info'] },
-    { icon: '🥗', label: 'Dietary',           value: person['Dietary'] },
-    { icon: '📞', label: 'Emergency contact', value: person['Emergency Contact'] },
-    { icon: '💬', label: 'Anything else',     value: person['Anything Else'] },
+    { icon: '💃', label: 'Arrival Day',       value: arrivalDay },
+    { icon: '🕐', label: 'Arrival Time',       value: arrivalTime },
+    { icon: '✌️', label: 'Leaving',            value: departure },
+    { icon: '🏕️', label: 'Sleeping',           value: sleeping },
+    { icon: '🚗', label: 'Car in camp',        value: bringingCar },
+    { icon: '🔑', label: 'Car make & model',   value: carInfo },
+    { icon: '🥗', label: 'Dietary',            value: dietary },
+    { icon: '📞', label: 'Emergency contact',  value: emergency },
+    { icon: '💬', label: 'Anything else',      value: anything },
   ].filter(r => r.value);
 
   return (
