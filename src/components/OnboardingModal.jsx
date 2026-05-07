@@ -2,7 +2,7 @@ import { useState, useRef, Fragment } from 'react';
 import { useSheetData } from '../hooks/useSheetData';
 import { SHEET_TABS } from '../config/sheets';
 import { useIdentity } from '../context/IdentityContext';
-import { compressImage } from '../utils/image';
+import { uploadToCloudinary } from '../utils/cloudinary';
 import Avatar from './Avatar';
 import './OnboardingModal.css';
 
@@ -14,8 +14,10 @@ export default function OnboardingModal({ year }) {
   const [sheetName,   setSheetName]   = useState('');
   const [picked,      setPicked]      = useState(false);
   const [displayName, setDisplayName] = useState('');
-  const [photo,       setPhoto]       = useState(null);
+  const [photoFile,   setPhotoFile]   = useState(null);
+  const [photoPreview,setPhotoPreview]= useState(null);
   const [dropping,    setDropping]    = useState(false);
+  const [submitting,  setSubmitting]  = useState(false);
   const fileRef = useRef();
 
   const names = freaqData.map(r => r['Name']).filter(Boolean);
@@ -28,13 +30,11 @@ export default function OnboardingModal({ year }) {
     }
   };
 
-  const handlePhotoFile = async (file) => {
+  const handlePhotoFile = (file) => {
     if (!file?.type.startsWith('image/')) return;
+    setPhotoFile(file);
     const reader = new FileReader();
-    reader.onload = async (e) => {
-      const compressed = await compressImage(e.target.result, 200, 0.75);
-      setPhoto(compressed);
-    };
+    reader.onload = (e) => setPhotoPreview(e.target.result);
     reader.readAsDataURL(file);
   };
 
@@ -44,10 +44,16 @@ export default function OnboardingModal({ year }) {
     handlePhotoFile(e.dataTransfer.files?.[0]);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    let photoUrl = null;
+    if (photoFile) {
+      try { photoUrl = await uploadToCloudinary(photoFile); }
+      catch { /* continue without photo */ }
+    }
     const finalSheet = sheetName === '__new__' ? '' : sheetName;
     const finalName  = displayName.trim() || finalSheet || 'Palace Freaq';
-    setIdentity({ sheetName: finalSheet, displayName: finalName, photo });
+    setIdentity({ sheetName: finalSheet, displayName: finalName, photo: photoUrl });
   };
 
   return (
@@ -135,7 +141,7 @@ export default function OnboardingModal({ year }) {
             <p className="ob-hint">Optional but encouraged. Shows on your card and the crew timeline.</p>
 
             <div
-              className={`ob-photo-zone ${dropping ? 'ob-dropping' : ''} ${photo ? 'ob-has-photo' : ''}`}
+              className={`ob-photo-zone ${dropping ? 'ob-dropping' : ''} ${photoPreview ? 'ob-has-photo' : ''}`}
               onClick={() => fileRef.current?.click()}
               onDragOver={e => { e.preventDefault(); setDropping(true); }}
               onDragLeave={() => setDropping(false)}
@@ -143,9 +149,9 @@ export default function OnboardingModal({ year }) {
               role="button"
               aria-label="Upload photo"
             >
-              {photo ? (
+              {photoPreview ? (
                 <div className="ob-photo-preview-wrap">
-                  <Avatar photo={photo} name={displayName} size="xl" />
+                  <Avatar photo={photoPreview} name={displayName} size="xl" />
                   <span className="ob-photo-change">Click to change</span>
                 </div>
               ) : (
@@ -161,16 +167,16 @@ export default function OnboardingModal({ year }) {
               className="ob-file-hidden"
               onChange={e => handlePhotoFile(e.target.files?.[0])} />
 
-            {photo && (
-              <button className="ob-remove-photo" onClick={e => { e.stopPropagation(); setPhoto(null); }}>
+            {photoPreview && (
+              <button className="ob-remove-photo" onClick={e => { e.stopPropagation(); setPhotoFile(null); setPhotoPreview(null); }}>
                 Remove photo
               </button>
             )}
 
             <div className="ob-nav-row">
               <button className="ob-back-btn" onClick={() => setStep(2)}>← Back</button>
-              <button className="ob-submit-btn" onClick={handleSubmit}>
-                Let's go 🚀
+              <button className="ob-submit-btn" disabled={submitting} onClick={handleSubmit}>
+                {submitting ? 'Uploading…' : "Let's go 🚀"}
               </button>
             </div>
           </div>

@@ -1,11 +1,6 @@
 /* ---- Header row ---- */
 .freaqs-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
 .freaqs-title {
@@ -54,7 +49,9 @@
   gap: 24px;
   margin-bottom: 8px;
   padding: 16px 20px;
-  background: transparent;
+  background: rgba(5, 5, 20, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   flex-wrap: wrap;
@@ -193,6 +190,11 @@
   gap: 20px;
 }
 
+.freaq-detail-photo {
+  display: flex;
+  justify-content: center;
+}
+
 .freaq-builder-badge--modal {
   align-self: flex-start;
 }
@@ -305,15 +307,7 @@
 
 @media (max-width: 640px) {
   .freaqs-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .join-crew-btn {
-    width: 100%;
-    justify-content: center;
+    margin-bottom: 12px;
   }
 
   /* Scrollable stats row */

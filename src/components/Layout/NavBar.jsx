@@ -1,6 +1,7 @@
+import { useState, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
-import YearSelector from './YearSelector';
 import ProfileBadge from '../ProfileBadge';
+import NavDrawer from '../NavDrawer';
 import './NavBar.css';
 
 const NAV_ITEMS = [
@@ -14,37 +15,51 @@ const NAV_ITEMS = [
   { to: '/shh',      label: 'Shhh',          icon: '👀' },
 ];
 
-export default function NavBar({ year, onYearChange }) {
+export default function NavBar() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+
   return (
-    <header className="navbar">
-      <div className="navbar-inner">
-        <div className="navbar-brand">
-          <span className="brand-logo">⚡</span>
-          <div className="brand-text">
-            <span className="brand-name neon-purple">LiB Freaqs</span>
-            <span className="brand-sub">Party Palace</span>
+    <>
+      <header className="navbar">
+        <div className="navbar-inner">
+          <div className="navbar-brand">
+            <span className="brand-logo">⚡</span>
+            <div className="brand-text">
+              <span className="brand-name neon-purple">LiB Freaqs</span>
+              <span className="brand-sub">Party Palace</span>
+            </div>
+          </div>
+
+          <nav className="navbar-nav" role="navigation" aria-label="Main navigation">
+            {NAV_ITEMS.map(({ to, label, icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={to === '/'}
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              >
+                <span className="nav-icon" aria-hidden="true">{icon}</span>
+                <span className="nav-label">{label}</span>
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="navbar-right">
+            <ProfileBadge />
+            <button
+              className="navbar-drawer-btn"
+              onClick={() => setDrawerOpen(true)}
+              aria-label="Open navigation"
+              aria-expanded={drawerOpen}
+            >
+              ⚡
+            </button>
           </div>
         </div>
+      </header>
 
-        <nav className="navbar-nav" role="navigation" aria-label="Main navigation">
-          {NAV_ITEMS.map(({ to, label, icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={to === '/'}
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-            >
-              <span className="nav-icon" aria-hidden="true">{icon}</span>
-              <span className="nav-label">{label}</span>
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="navbar-right">
-          <YearSelector year={year} onChange={onYearChange} />
-          <ProfileBadge />
-        </div>
-      </div>
-    </header>
+      <NavDrawer open={drawerOpen} onClose={closeDrawer} />
+    </>
   );
 }

@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { post } from '../config/webhook';
 import { useIdentity } from '../context/IdentityContext';
+import { uploadToCloudinary } from '../utils/cloudinary';
+import Avatar from './Avatar';
 import './JoinCrewForm.css';
 
 const ARRIVAL_DAYS   = ['Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -79,10 +81,17 @@ function Toggle({ value, onChange }) {
 // ── Main form ─────────────────────────────────────────────────────────────────
 
 export default function JoinCrewForm({ onClose, prefill, mode = 'join' }) {
-  const { identity }        = useIdentity();
-  const [form, setForm]     = useState(prefill ? { ...INIT, ...prefill } : INIT);
-  const [status, setStatus] = useState('idle');
-  const [errors, setErrors] = useState({});
+  const { identity, setIdentity } = useIdentity();
+  const [form, setForm]           = useState(prefill ? { ...INIT, ...prefill } : INIT);
+  const [status, setStatus]       = useState('idle');
+  const [errors, setErrors]       = useState({});
+
+  // Update-mode profile fields (display name + photo)
+  const [editDisplayName, setEditDisplayName] = useState(identity?.displayName || '');
+  const [photoFile, setPhotoFile]             = useState(null);
+  const [photoPreview, setPhotoPreview]       = useState(identity?.photo || null);
+  const [dropping, setDropping]               = useState(false);
+  const fileRef = useRef();
 
   const set = (key, val) => {
     setForm(f => ({ ...f, [key]: val }));
@@ -96,17 +105,46 @@ export default function JoinCrewForm({ onClose, prefill, mode = 'join' }) {
     return e;
   };
 
-  const handleSubmit = (evt) => {
+  const handlePhotoFile = (file) => {
+    if (!file?.type.startsWith('image/')) return;
+    setPhotoFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev) => setPhotoPreview(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
 
     setStatus('loading');
 
+    // Upload new photo to Cloudinary if a file was selected
+    let photoUrl = mode === 'update' ? (photoPreview || identity?.photo || '') : (identity?.photo || '');
+    if (photoFile) {
+      try { photoUrl = await uploadToCloudinary(photoFile); }
+      catch { /* keep existing */ }
+    }
+
+    // Update identity with any changed display name or photo
+    if (mode === 'update' && identity) {
+      setIdentity({
+        ...identity,
+        displayName: editDisplayName.trim() || identity.displayName,
+        photo: photoUrl || identity.photo || null,
+      });
+    }
+
+    const resolvedDisplayName = mode === 'update'
+      ? (editDisplayName.trim() || identity?.displayName || '')
+      : (identity?.displayName || '');
+
     const payload = {
       action:            mode === 'update' ? 'updateCrew' : 'joinCrew',
       name:              form.name.trim(),
-      displayName:       identity?.displayName || '',
+      displayName:       resolvedDisplayName,
+      photoUrl:          photoUrl || '',
       arrivalDay:        form.arrivalDay,
       arrivalTime:       form.arrivalTime,
       departureDay:      form.departureDay,
@@ -160,6 +198,51 @@ export default function JoinCrewForm({ onClose, prefill, mode = 'join' }) {
   // ── Form ────────────────────────────────────────────────────────────────────
   return (
     <form className="jcf-form" onSubmit={handleSubmit} noValidate>
+
+      {/* Profile section — update mode only */}
+      {mode === 'update' && (
+        <div className="jcf-profile-section jcf-field--full">
+          <div className="jcf-profile-photo-row">
+            {/* Photo upload */}
+            <div
+              className={`jcf-photo-zone ${dropping ? 'jcf-dropping' : ''}`}
+              onClick={() => fileRef.current?.click()}
+              onDragOver={e => { e.preventDefault(); setDropping(true); }}
+              onDragLeave={() => setDropping(false)}
+              onDrop={e => { e.preventDefault(); setDropping(false); handlePhotoFile(e.dataTransfer.files?.[0]); }}
+              role="button"
+              aria-label="Upload photo"
+            >
+              {photoPreview ? (
+                <div className="jcf-photo-preview">
+                  <Avatar photo={photoPreview} name={editDisplayName || identity?.displayName} size="lg" />
+                  <span className="jcf-photo-change">tap to change</span>
+                </div>
+              ) : (
+                <div className="jcf-photo-placeholder">
+                  <span>📷</span>
+                  <span className="jcf-photo-hint">Upload photo</span>
+                </div>
+              )}
+            </div>
+            <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }}
+              onChange={e => handlePhotoFile(e.target.files?.[0])} />
+
+            {/* Display name */}
+            <div className="jcf-field jcf-profile-name-field">
+              <Label>Display Name</Label>
+              <FieldWrap>
+                <input className="jcf-input" type="text"
+                  placeholder="How you appear to the crew"
+                  value={editDisplayName}
+                  onChange={e => setEditDisplayName(e.target.value)}
+                  maxLength={40} />
+              </FieldWrap>
+              <span className="jcf-hint-text">Nickname, vibe, whatever you go by</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Name — full width */}
       <div className="jcf-field jcf-field--full">

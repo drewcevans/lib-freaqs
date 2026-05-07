@@ -1,11 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import Avatar from './Avatar';
+import Modal from './Modal';
+import JoinCrewForm, { rowToForm } from './JoinCrewForm';
 import { useIdentity } from '../context/IdentityContext';
+import { useSheetData } from '../hooks/useSheetData';
+import { DEFAULT_YEAR, SHEET_TABS } from '../config/sheets';
 import './ProfileBadge.css';
 
 export default function ProfileBadge() {
-  const { identity, setIdentity } = useIdentity();
-  const [open, setOpen] = useState(false);
+  const { identity, setIdentity }     = useIdentity();
+  const { data }                      = useSheetData(DEFAULT_YEAR, SHEET_TABS.freaqs);
+  const [open, setOpen]               = useState(false);
+  const [editOpen, setEditOpen]       = useState(false);
   const ref = useRef();
 
   useEffect(() => {
@@ -17,31 +23,54 @@ export default function ProfileBadge() {
 
   if (!identity) return null;
 
-  return (
-    <div className="pb-wrap" ref={ref}>
-      <button className="pb-btn" onClick={() => setOpen(o => !o)} aria-label="Your profile">
-        <Avatar photo={identity.photo} name={identity.displayName} size="sm" />
-        <span className="pb-name">{identity.displayName}</span>
-      </button>
+  const myRow = identity.sheetName
+    ? data.find(r => ((r['Name'] || '').trim() || Object.values(r)[1]?.trim() || '') === identity.sheetName) || null
+    : null;
 
-      {open && (
-        <div className="pb-menu">
-          <div className="pb-menu-user">
-            <Avatar photo={identity.photo} name={identity.displayName} size="md" />
-            <div>
-              <div className="pb-menu-display">{identity.displayName}</div>
-              {identity.sheetName && (
-                <div className="pb-menu-sheet">on crew list as: {identity.sheetName}</div>
-              )}
+  const openEdit = () => {
+    setOpen(false);
+    setEditOpen(true);
+  };
+
+  return (
+    <>
+      <div className="pb-wrap" ref={ref}>
+        <button className="pb-btn" onClick={() => setOpen(o => !o)} aria-label="Your profile">
+          <Avatar photo={identity.photo} name={identity.displayName} size="sm" />
+          <span className="pb-name">{identity.displayName}</span>
+        </button>
+
+        {open && (
+          <div className="pb-menu">
+            <div className="pb-menu-user">
+              <Avatar photo={identity.photo} name={identity.displayName} size="md" />
+              <div>
+                <div className="pb-menu-display">{identity.displayName}</div>
+                {identity.sheetName && (
+                  <div className="pb-menu-sheet">on crew list as: {identity.sheetName}</div>
+                )}
+              </div>
             </div>
+            <button className="pb-menu-action pb-menu-action--primary" onClick={openEdit}>
+              ✏️ Edit Profile
+            </button>
+            <button
+              className="pb-menu-action pb-menu-action--signout"
+              onClick={() => { setIdentity(null); setOpen(false); }}>
+              ↩ Sign out
+            </button>
           </div>
-          <button
-            className="pb-menu-action"
-            onClick={() => { setIdentity(null); setOpen(false); }}>
-            ↩ Switch identity
-          </button>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+
+      <Modal isOpen={editOpen} onClose={() => setEditOpen(false)}
+             title="Edit Profile ✏️" panelClass="modal-panel--wide">
+        <JoinCrewForm
+          onClose={() => setEditOpen(false)}
+          prefill={myRow ? rowToForm(myRow) : undefined}
+          mode="update"
+        />
+      </Modal>
+    </>
   );
 }

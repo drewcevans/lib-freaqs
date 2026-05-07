@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { IdentityProvider, useIdentity } from './context/IdentityContext';
 import Layout from './components/Layout/Layout';
@@ -14,15 +13,15 @@ import Shh from './pages/Shh';
 import { DEFAULT_YEAR } from './config/sheets';
 
 function AppInner() {
-  const [year, setYear] = useState(DEFAULT_YEAR);
   const { identity } = useIdentity();
+  const year = DEFAULT_YEAR;
 
   if (!identity) return <OnboardingModal year={year} />;
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Layout year={year} onYearChange={setYear} />}>
+        <Route element={<Layout />}>
           <Route index            element={<Freaqs year={year} />} />
           <Route path="agenda"    element={<Agenda year={year} />} />
           <Route path="bring"     element={<WhatToBring year={year} />} />

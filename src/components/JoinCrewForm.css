@@ -8,6 +8,96 @@
   gap: 18px;
 }
 
+/* ── Profile section (update mode) ── */
+.jcf-profile-section {
+  background: rgba(200, 0, 255, 0.04);
+  border: 1px solid rgba(200, 0, 255, 0.18);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.jcf-profile-photo-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.jcf-photo-zone {
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+  border: 2px dashed rgba(200, 0, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: rgba(200, 0, 255, 0.04);
+  overflow: hidden;
+}
+.jcf-photo-zone:hover,
+.jcf-dropping {
+  border-color: var(--neon-purple);
+  background: rgba(200, 0, 255, 0.1);
+}
+
+.jcf-photo-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.jcf-photo-change {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-family: var(--font-display);
+  font-size: 0.42rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.65);
+  color: var(--text-muted);
+  padding: 3px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.jcf-photo-zone:hover .jcf-photo-change { opacity: 1; }
+
+.jcf-photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-dim);
+  font-size: 1.4rem;
+}
+
+.jcf-photo-hint {
+  font-family: var(--font-display);
+  font-size: 0.48rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.jcf-profile-name-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.jcf-hint-text {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: -4px;
+}
+
 /* ── Field layout ── */
 .jcf-field {
   display: flex;

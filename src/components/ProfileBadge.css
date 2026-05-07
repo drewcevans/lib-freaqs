@@ -90,8 +90,23 @@
   padding: 8px 12px;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
   text-align: center;
+}
+
+.pb-menu-action--primary {
+  border-color: rgba(200, 0, 255, 0.35);
+  color: var(--neon-purple);
+}
+.pb-menu-action--primary:hover {
+  color: var(--neon-purple);
+  border-color: var(--neon-purple);
+  background: rgba(200, 0, 255, 0.08);
+}
+
+.pb-menu-action--signout {
+  font-size: 0.55rem;
+  opacity: 0.6;
 }
 
 .pb-menu-action:hover {

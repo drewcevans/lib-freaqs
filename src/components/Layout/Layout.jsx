@@ -3,11 +3,11 @@ import NavBar from './NavBar';
 import LaserShow from '../LaserShow';
 import './Layout.css';
 
-export default function Layout({ year, onYearChange }) {
+export default function Layout() {
   return (
     <>
       <LaserShow />
-      <NavBar year={year} onYearChange={onYearChange} />
+      <NavBar />
       <main className="layout-main">
         <Outlet />
       </main>

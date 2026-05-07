@@ -1,0 +1,100 @@
+.nd-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 299;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.nd-backdrop--open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.nd-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 300;
+  width: 260px;
+  max-width: 82vw;
+  background: rgba(4, 4, 18, 0.99);
+  border-left: 1px solid rgba(200, 0, 255, 0.3);
+  box-shadow: -8px 0 48px rgba(200, 0, 255, 0.18);
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  padding: 18px 0 env(safe-area-inset-bottom, 24px);
+  overflow-y: auto;
+}
+
+.nd-drawer--open {
+  transform: translateX(0);
+}
+
+.nd-close {
+  align-self: flex-end;
+  margin-right: 16px;
+  margin-bottom: 12px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+.nd-close:hover {
+  color: var(--neon-pink);
+  background: rgba(255, 0, 200, 0.08);
+}
+
+.nd-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 10px;
+}
+
+.nd-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  border: 1px solid transparent;
+}
+
+.nd-item:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.nd-item--active {
+  color: var(--neon-pink);
+  background: rgba(255, 0, 200, 0.08);
+  border-color: rgba(255, 0, 200, 0.22);
+  text-shadow: 0 0 10px var(--neon-pink);
+}
+
+.nd-item-icon {
+  font-size: 1.15rem;
+  width: 26px;
+  text-align: center;
+  flex-shrink: 0;
+}
