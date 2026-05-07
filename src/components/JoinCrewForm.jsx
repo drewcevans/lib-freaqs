@@ -26,17 +26,17 @@ export function rowToForm(row) {
     arrivalTime:       c('Arrival Time', 'arrivalTime'),
     departureDay:      c('Departure Day', 'departureDay'),
     buildCrew:         b('Builder', 'buildCrew'),
-    bringingCar:       b('Bringing Car', 'bringingCar'),
-    carDetails:        c('Car Info', 'carDetails'),
-    sleepingSituation: c('Sleeping Situation', 'sleepingSituation'),
-    dietary:           c('Dietary', 'dietary'),
-    emergencyContact:  c('Emergency Contact', 'emergencyContact'),
+    bringingCar:       b('Car Placement', 'Bringing Car', 'bringingCar'),
+    carDetails:        c('Car Make/Model', 'Car Info', 'carDetails'),
+    sleepingSituation: c('Where will you sleep?', 'Sleeping Situation', 'sleepingSituation'),
+    dietary:           c('Dietary needs or restrictions', 'Dietary', 'dietaryNeeds', 'dietary'),
+    emergencyContact:  c('Emergency contact', 'Emergency Contact', 'emergencyContact'),
     set1:              c('Set 1', 'set1'),
     set2:              c('Set 2', 'set2'),
     set3:              c('Set 3', 'set3'),
     meltSongTitle:     c('Melt Song Title', 'meltSongTitle'),
     meltSongArtist:    c('Melt Song Artist', 'meltSongArtist'),
-    anythingElse:      c('Anything Else', 'anythingElse'),
+    anythingElse:      c('Anything else to know about you?', 'Anything Else', 'anythingElse'),
   };
 }
 
@@ -126,7 +126,10 @@ export default function JoinCrewForm({ onClose, prefill, mode = 'join' }) {
     console.log('JoinCrewForm payload:', payload);
     post(payload);
 
-    setTimeout(() => setStatus('success'), 900);
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setStatus('success');
+    }, 900);
   };
 
   // ── Success screen ──────────────────────────────────────────────────────────

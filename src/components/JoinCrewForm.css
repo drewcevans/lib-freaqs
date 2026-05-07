@@ -145,7 +145,7 @@
 }
 
 /* ── Time input ── */
-.jcf-time { color-scheme: dark; }
+.jcf-time { color-scheme: dark; text-align: left; padding-left: 14px; }
 .jcf-time::-webkit-calendar-picker-indicator {
   filter: invert(0.7) hue-rotate(180deg);
   cursor: pointer;
