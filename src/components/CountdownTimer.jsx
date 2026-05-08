@@ -39,7 +39,6 @@ export default function CountdownTimer() {
 
   return (
     <div className="cdt-wrap">
-      <div className="cdt-label">Until the Palace rises 🏰⚡</div>
       <div className="cdt-digits">
         {UNITS.map(({ key, label, cls }, i) => (
           <Fragment key={key}>
@@ -51,6 +50,7 @@ export default function CountdownTimer() {
           </Fragment>
         ))}
       </div>
+      <div className="cdt-label">until we get back to work 🏕️⚡</div>
     </div>
   );
 }

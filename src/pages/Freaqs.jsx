@@ -64,9 +64,15 @@ export default function Freaqs({ year }) {
   if (loading) return <LoadingState label="Loading the crew..." />;
   if (error)   return <ErrorState message={error} />;
 
-  const builders = data.filter(r => isBuilder(col(r, 'Builder') || idx(r, 7)));
-  const cars     = data.filter(r => col(r, 'Car Make/Model', 'Car Info', 'carDetails') || idx(r, 9));
-  const openAir  = data.filter(r =>
+  // Only show rows that have a non-empty Name (column index 1) — positional check
+  // ensures rows with only a Name and no other data are still included
+  const visibleData = data.filter(r => (Object.values(r)[1] || '').trim());
+  console.log('[Freaqs] data from hook (' + data.length + '):', data);
+  console.log('[Freaqs] visibleData after filter (' + visibleData.length + '):', visibleData);
+
+  const builders = visibleData.filter(r => isBuilder(col(r, 'Builder') || idx(r, 7)));
+  const cars     = visibleData.filter(r => col(r, 'Car Make/Model', 'Car Info', 'carDetails') || idx(r, 9));
+  const openAir  = visibleData.filter(r =>
     (col(r, 'Where will you sleep?', 'Sleeping Situation', 'sleepingSituation') || idx(r, 10)) === 'Open Air'
   );
 
@@ -85,10 +91,10 @@ export default function Freaqs({ year }) {
 
       <CountdownTimer />
 
-      {data.length > 0 && (
+      {visibleData.length > 0 && (
         <div className="freaqs-stats">
           <div className="freaq-stat">
-            <span className="freaq-stat-num neon-cyan">{data.length}</span>
+            <span className="freaq-stat-num neon-cyan">{visibleData.length}</span>
             <span className="freaq-stat-label">Total Freaqs</span>
           </div>
           <div className="freaq-stat">
@@ -108,7 +114,7 @@ export default function Freaqs({ year }) {
 
       <PickleCatGreeting />
 
-      {data.length === 0 ? (
+      {visibleData.length === 0 ? (
         <EmptyState
           icon="💃"
           title="No freaqs yet!"
@@ -116,7 +122,7 @@ export default function Freaqs({ year }) {
         />
       ) : (
         <div className="freaqs-grid">
-          {data.map((person, i) => (
+          {visibleData.map((person, i) => (
             <FreaqCard key={i} person={person} index={i} identity={identity}
                        onClick={() => {
                          window.scrollTo({ top: 0, behavior: 'smooth' });

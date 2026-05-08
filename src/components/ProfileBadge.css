@@ -37,6 +37,17 @@
   .pb-name { display: inline; }
 }
 
+@media (max-width: 899px) {
+  .pb-btn {
+    border: none;
+    padding: 2px;
+    background: transparent;
+  }
+  .pb-btn:hover {
+    background: transparent;
+  }
+}
+
 /* ── Dropdown menu ── */
 .pb-menu {
   position: absolute;

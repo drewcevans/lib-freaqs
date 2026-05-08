@@ -122,21 +122,29 @@
 .navbar-drawer-btn {
   display: none;
   background: transparent;
-  border: 1px solid rgba(200, 0, 255, 0.3);
+  border: 1.5px solid var(--neon-pink);
   border-radius: 8px;
-  color: var(--neon-purple);
   font-size: 1.1rem;
   width: 36px;
   height: 36px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  filter: drop-shadow(0 0 6px rgba(200, 0, 255, 0.5));
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 8px rgba(255, 0, 200, 0.25);
 }
 .navbar-drawer-btn:hover {
-  border-color: var(--neon-purple);
-  box-shadow: 0 0 14px rgba(200, 0, 255, 0.3);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 14px rgba(255, 0, 200, 0.4), 0 0 14px rgba(0, 245, 255, 0.2);
+}
+
+.nb-bolt {
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  line-height: 1;
 }
 
 /* ---- Mobile: hide label text ---- */

@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { to: '/food',     label: 'Food & Drank',  icon: '🍺' },
   { to: '/builders', label: 'Builders',      icon: '🎨' },
   { to: '/map',      label: 'Camp Map',      icon: '🗺️' },
-  { to: '/sets',     label: 'Set List',      icon: '⚡' },
+  { to: '/sets',     label: 'Set List',      icon: '🎵' },
   { to: '/shh',      label: 'Shhh',          icon: '👀' },
 ];
 

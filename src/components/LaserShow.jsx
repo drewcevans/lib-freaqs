@@ -121,38 +121,6 @@ export default function LaserShow() {
         ctx.restore();
       }
 
-      const cyclePos = (t % 20) / 20;
-      const paletteIdx = cyclePos * NEON_PALETTE.length;
-      const idxA = Math.floor(paletteIdx) % NEON_PALETTE.length;
-      const idxB = (idxA + 1) % NEON_PALETTE.length;
-      const frac = paletteIdx - Math.floor(paletteIdx);
-      const neonColor = NEON_PALETTE[Math.round(frac < 0.5 ? idxA : idxB)];
-
-      const fontSize = Math.max(48, Math.min(W * 0.11, 108));
-      ctx.font = `900 ${fontSize}px Orbitron, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      const textX = W * 0.5;
-      const textY = H * 0.22;
-
-      ctx.save();
-      ctx.shadowColor = neonColor;
-      ctx.shadowBlur = 80;
-      ctx.globalAlpha = 0.45;
-      ctx.fillStyle = neonColor;
-      ctx.fillText('LFGGGGG', textX, textY);
-
-      ctx.shadowBlur = 30;
-      ctx.globalAlpha = 0.8;
-      ctx.fillText('LFGGGGG', textX, textY);
-
-      ctx.shadowColor = '#fff';
-      ctx.shadowBlur = 8;
-      ctx.fillStyle = '#fff';
-      ctx.globalAlpha = 0.88;
-      ctx.fillText('LFGGGGG', textX, textY);
-      ctx.restore();
-
       const srcC = [W * 0.5, H * 0.9];
       const srcL = [W * 0.12, H * 0.92];
       const srcR = [W * 0.88, H * 0.92];

@@ -197,9 +197,11 @@ function CatSign() {
 }
 
 /* ── Scene ────────────────────────────────────────────────── */
-export default function PickleCatGreeting() {
+export default function PickleCatGreeting({ text = 'LFGGGGG' }) {
   return (
     <div className="pcg-scene" aria-hidden="true">
+      <div className="pcg-lfg">{text}</div>
+
       <div className="pcg-pickle-wrapper">
         <PickleSign />
         <div className="pcg-pole pcg-pole--green" />

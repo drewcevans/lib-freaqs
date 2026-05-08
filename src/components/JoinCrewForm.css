@@ -103,6 +103,7 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
+  min-width: 0;
 }
 
 /* ── Desktop two-column form ── */
@@ -235,7 +236,15 @@
 }
 
 /* ── Time input ── */
-.jcf-time { color-scheme: dark; text-align: left; padding-left: 14px; }
+.jcf-time { color-scheme: dark; text-align: left; padding-left: 14px; min-width: 0; }
+
+@media (max-width: 768px) {
+  .jcf-time {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
 .jcf-time::-webkit-calendar-picker-indicator {
   filter: invert(0.7) hue-rotate(180deg);
   cursor: pointer;

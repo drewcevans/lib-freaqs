@@ -22,8 +22,9 @@ export function useSheetData(year, tab) {
     Papa.parse(url, {
       download: true,
       header: true,
-      skipEmptyLines: true,
+      skipEmptyLines: false,
       complete: (results) => {
+        console.log('[useSheetData] raw CSV rows (' + results.data.length + '):', results.data);
         setData(results.data);
         setLoading(false);
       },

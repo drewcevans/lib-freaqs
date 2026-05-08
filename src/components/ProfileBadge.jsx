@@ -24,7 +24,10 @@ export default function ProfileBadge() {
   if (!identity) return null;
 
   const myRow = identity.sheetName
-    ? data.find(r => ((r['Name'] || '').trim() || Object.values(r)[1]?.trim() || '') === identity.sheetName) || null
+    ? data.find(r => {
+        const name = (r['Name'] || '').trim() || (Object.values(r)[1] || '').trim();
+        return name === identity.sheetName;
+      }) ?? null
     : null;
 
   const openEdit = () => {

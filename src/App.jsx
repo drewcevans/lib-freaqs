@@ -19,7 +19,7 @@ function AppInner() {
   if (!identity) return <OnboardingModal year={year} />;
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/lib-freaqs/">
       <Routes>
         <Route element={<Layout />}>
           <Route index            element={<Freaqs year={year} />} />
