@@ -1,0 +1,1 @@
+var e=`https://script.google.com/macros/s/AKfycbzElJ7eBedD1goiEaXkjBLmLUDddqZ0amePiSG9oNYcDMGs5aSk7HqNWF0AeQxmnPA-/exec`,t=t=>fetch(e,{method:`POST`,mode:`no-cors`,redirect:`follow`,headers:{"Content-Type":`text/plain;charset=utf-8`},body:JSON.stringify(t)}).catch(()=>{});export{t};

@@ -1,1 +1,0 @@
-import{a as e,n as t}from"./jsx-runtime-m7G7yzlP.js";var n=e(t(),1);function r(e,t){let[r,i]=(0,n.useState)(()=>{try{let n=localStorage.getItem(e);return n===null?t:JSON.parse(n)}catch{return t}});return[r,t=>{try{i(t),localStorage.setItem(e,JSON.stringify(t))}catch(e){console.error(`localStorage write failed:`,e)}}]}export{r as t};
